@@ -1,117 +1,107 @@
 package com.disasterresponse.controller;
 
+import com.disasterresponse.model.Disaster;
+import com.disasterresponse.model.SessionManager;
+import dao.DisasterDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.fxml.Initializable;
 
 public class ViewDisastersController implements Initializable {
 
     @FXML
-    private VBox disastersVBox; // VBox to dynamically add disaster information
+    private VBox disastersVBox; // VBox to dynamically add disaster reports
 
-    private static final String CSV_FILE_PATH = "src/main/resources/com/csv/disaster_reports.csv";
+    private DisasterDAO disasterDAO = new DisasterDAO();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         loadDisasterReports();
     }
 
+    // Method to load disaster reports from the database
     private void loadDisasterReports() {
-        List<VBox> disasterList = new ArrayList<>(); // List to store disaster boxes
+        try {
+            List<Disaster> disasterList = disasterDAO.getAllDisasters();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(CSV_FILE_PATH))) {
-            String line;
-            boolean isHeader = true;
+            for (Disaster disaster : disasterList) {
+                VBox disasterBox = new VBox(5); // Spacing between elements
 
-            while ((line = reader.readLine()) != null) {
-                if (isHeader) { // Skip header line
-                    isHeader = false;
-                    continue;
-                }
+                // Create labels for each field
+                Label locationLabel = new Label(disaster.getLocation());
+                locationLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
 
-                String[] disasterDetails = line.split(",");
-                if (disasterDetails.length >= 8) {  // Assuming 8th column is the status
-                    String location = disasterDetails[3];
-                    String disasterType = disasterDetails[2];
-                    String severity = disasterDetails[4];
-                    String comments = disasterDetails[5];
-                    String reportedTime = disasterDetails[6];
-                    String status = disasterDetails[7]; // New status column
+                Label typeLabel = new Label("Disaster Type: " + disaster.getType());
+                typeLabel.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.ITALIC, 12));
 
-                    // Create a container for each disaster report
-                    VBox disasterBox = new VBox(5); // spacing between elements
+                Label timeLabel = new Label("Disaster Reported: " + disaster.getReportedTime());
+                timeLabel.setFont(Font.font("Arial", FontWeight.BOLD, 12));
 
-                    // Location Label (Bold, Font Size 14)
-                    Label locationLabel = new Label(location);
-                    locationLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+                Label severityLabel = new Label(disaster.getSeverity());
+                severityLabel.setFont(Font.font("Arial", 12));
+                severityLabel.setStyle("-fx-background-radius: 5; -fx-padding: 2;");
+                setSeverityBackgroundColor(severityLabel, disaster.getSeverity());
 
-                    // Disaster Type Label (Bold, Italic, Font Size 12)
-                    Label typeLabel = new Label("Disaster Type: " + disasterType);
-                    typeLabel.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.ITALIC, 12));
+                Label statusLabel = new Label("Status: " + disaster.getStatus());
+                statusLabel.setFont(Font.font("Arial", 12));
+                statusLabel.setStyle("-fx-background-radius: 5; -fx-padding: 2;");
+                setStatusBackgroundColor(statusLabel, disaster.getStatus());
 
-                    // Reported Time Label (Bold, Font Size 12)
-                    Label timeLabel = new Label("Disaster Reported: " + reportedTime);
-                    timeLabel.setFont(Font.font("Arial", FontWeight.BOLD, 12));
+                Label commentsLabel = new Label("Description: " + disaster.getComment());
+                commentsLabel.setFont(Font.font("Arial", 12));
 
-                    // Severity Label with Background Color
-                    Label severityLabel = new Label(severity);
-                    severityLabel.setFont(Font.font("Arial", 12));
-                    severityLabel.setStyle("-fx-background-radius: 5; -fx-padding: 2;"); // Rounded corners and padding
-                    setSeverityBackgroundColor(severityLabel, severity);
+                // Add labels to the VBox for the individual disaster
+                disasterBox.getChildren().addAll(locationLabel, typeLabel, timeLabel, severityLabel, statusLabel, commentsLabel);
+                disasterBox.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10; -fx-background-radius: 5;");
 
-                    // Status Label with Background Color
-                    Label statusLabel = new Label("Status: " + status);
-                    statusLabel.setFont(Font.font("Arial", 12));
-                    statusLabel.setStyle("-fx-background-radius: 5; -fx-padding: 2;"); // Rounded corners and padding
-                    setStatusBackgroundColor(statusLabel, status);  // Set the background color based on status
-
-                    // Comments Label (Description)
-                    Label commentsLabel = new Label("Description: " + comments);
-                    commentsLabel.setFont(Font.font("Arial", 12));
-
-                    // Add labels to disasterBox
-                    disasterBox.getChildren().addAll(locationLabel, typeLabel, timeLabel, severityLabel, statusLabel, commentsLabel);
-                    disasterBox.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10; -fx-background-radius: 5;");
-
-                    // Add disasterBox to the list (instead of directly to the VBox)
-                    disasterList.add(disasterBox);
-                }
+                // Add each disasterBox to the disastersVBox
+                disastersVBox.getChildren().add(disasterBox);
             }
-
-            // Now add disasters to the VBox in reverse order (newest at the top)
-            for (int i = disasterList.size() - 1; i >= 0; i--) {
-                disastersVBox.getChildren().add(disasterList.get(i));
-            }
-
-        } catch (IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("File Error");
-            alert.setContentText("An error occurred while loading disaster reports.");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Database Error");
+            alert.setHeaderText("Error Loading Disaster Reports");
+            alert.setContentText("An error occurred while fetching disaster reports from the database.");
             alert.showAndWait();
         }
     }
 
+    // Back to Home button handler
+    @FXML
+    private void handleBackToHomeAction() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/disasterresponse/view/HomepageView.fxml"));
+            Parent root = loader.load();
+
+            // Re-initialize the homepage with the session data when returning
+            HomepageController controller = loader.getController();
+            controller.initializePage();
+
+            Stage stage = (Stage) disastersVBox.getScene().getWindow(); // Get the current stage
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Method to set the background color based on severity
     private void setSeverityBackgroundColor(Label label, String severity) {
         switch (severity.toLowerCase()) {
             case "critical":
@@ -121,7 +111,7 @@ public class ViewDisastersController implements Initializable {
                 label.setStyle(label.getStyle() + "-fx-background-color: orange; -fx-text-fill: black;");
                 break;
             case "medium":
-                label.setStyle(label.getStyle() + "-fx-background-color: yellow; -fx-text-fill: white;");
+                label.setStyle(label.getStyle() + "-fx-background-color: yellow; -fx-text-fill: black;");
                 break;
             case "low":
                 label.setStyle(label.getStyle() + "-fx-background-color: green; -fx-text-fill: black;");
@@ -132,6 +122,7 @@ public class ViewDisastersController implements Initializable {
         }
     }
 
+    // Method to set the background color based on the status
     private void setStatusBackgroundColor(Label label, String status) {
         switch (status.toLowerCase()) {
             case "active":
@@ -147,27 +138,8 @@ public class ViewDisastersController implements Initializable {
                 label.setStyle(label.getStyle() + "-fx-background-color: white; -fx-text-fill: black;");
                 break;
             default:
-                label.setStyle(label.getStyle() + "-fx-background-color: none; -fx-text-fill: black;"); // Default color
+                label.setStyle(label.getStyle() + "-fx-background-color: none; -fx-text-fill: black;");
                 break;
-        }
-    }
-
-    @FXML
-    protected void handleBackToHomeAction() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/disasterresponse/view/HomepageView.fxml"));
-            Parent root = loader.load();
-
-            // Re-initialize the homepage if returning
-            HomepageController controller = loader.getController();
-            controller.initializePage();
-
-            Stage stage = (Stage) disastersVBox.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }

@@ -1,6 +1,8 @@
 package com.disasterresponse.controller;
 
+import com.disasterresponse.model.Disaster;
 import com.disasterresponse.model.SessionManager;
+import dao.DisasterDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -10,8 +12,9 @@ import javafx.scene.Parent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
@@ -30,7 +33,7 @@ public class ReportDisasterViewController implements Initializable {
     @FXML
     private TextArea commentsArea;
 
-    private static final String CSV_FILE_PATH = "src/main/resources/com/csv/disaster_reports.csv";
+    private DisasterDAO disasterDAO = new DisasterDAO(); // DAO to handle database operations
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -57,31 +60,22 @@ public class ReportDisasterViewController implements Initializable {
         }
     }
 
-    private void saveDisasterReport(String DisasterType, String Location, String Severity, String Comments) {
-        File file = new File(CSV_FILE_PATH);
+    private void saveDisasterReport(String disasterType, String location, String severity, String comments) {
+        // Get the currently logged-in user's ID from SessionManager
+        String userId = SessionManager.getInstance().getUserId(); // Optional
 
-        if (!file.exists()) {
-            System.out.println("CSV file does not exist at: " + file.getAbsolutePath());
-        }
+        // Get the current timestamp
+        String reportedTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
-            // Generate a unique disaster ID
-            int disasterId = generateDisasterId();
+        // Default status is "Active"
+        String status = "Active";
 
-            // Get the currently logged-in user's ID from SessionManager
-            String userId = SessionManager.getInstance().getUserId();
+        // Create a new Disaster object
+        Disaster disaster = new Disaster(location, disasterType, severity, status, comments, reportedTime);
 
-            // Get the current timestamp
-            String reportedTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
-            // Default status is "Active"
-            String status = "Active";
-
-            // Write the disaster report to the CSV file in the correct column order
-            writer.write(disasterId + "," + userId + "," + DisasterType + "," + Location + "," + Severity + "," + Comments + "," + reportedTime + "," + status);
-            writer.newLine();
-            writer.flush(); // Ensure the data is written to the file
-
+        // Save the disaster report to the database using DAO
+        try {
+            disasterDAO.saveDisaster(disaster);
             Alert alert = new Alert(AlertType.INFORMATION);
             alert.setTitle("Success");
             alert.setHeaderText(null);
@@ -89,42 +83,14 @@ public class ReportDisasterViewController implements Initializable {
             alert.showAndWait();
 
             clearFields();
-        } catch (IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Error");
-            alert.setHeaderText("File Error");
-            alert.setContentText("An error occurred while saving the disaster report.");
+            alert.setHeaderText("Database Error");
+            alert.setContentText("An error occurred while saving the disaster report to the database.");
             alert.showAndWait();
         }
-    }
-
-    private int generateDisasterId() {
-        int maxDisasterId = 0; // Start with 0 and increment based on existing disaster IDs
-        try (BufferedReader reader = new BufferedReader(new FileReader(CSV_FILE_PATH))) {
-            String line;
-            boolean isFirstLine = true; // Skip header line
-            while ((line = reader.readLine()) != null) {
-                if (isFirstLine) {
-                    isFirstLine = false;
-                    continue;
-                }
-                String[] disasterDetails = line.split(",");
-                if (disasterDetails.length > 0) {
-                    try {
-                        int currentDisasterId = Integer.parseInt(disasterDetails[0].trim());
-                        if (currentDisasterId > maxDisasterId) {
-                            maxDisasterId = currentDisasterId;
-                        }
-                    } catch (NumberFormatException e) {
-                        System.err.println("Invalid disasterId format: " + disasterDetails[0]);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return maxDisasterId + 1; // Increment the highest found disasterId by 1 for the new report
     }
 
     private void clearFields() {

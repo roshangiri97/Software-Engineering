@@ -5,6 +5,7 @@ com\disasterresponse\App.class
 com\disasterresponse\controller\ForgotPasswordController.class
 com\disasterresponse\controller\ManageDisasterController$2.class
 com\disasterresponse\controller\ManageDisasterController.class
+dao\DisasterDAO.class
 module-info.class
 com\disasterresponse\model\User.class
 com\disasterresponse\model\Disaster.class
@@ -16,5 +17,6 @@ com\disasterresponse\controller\ReportDisasterViewController.class
 com\disasterresponse\model\RescueRequest.class
 com\disasterresponse\model\SessionManager.class
 com\disasterresponse\controller\LoginController.class
+com\disasterresponse\DatabaseConnection.class
 com\disasterresponse\controller\ViewDisastersController.class
 com\disasterresponse\controller\RescueRequestsController.class

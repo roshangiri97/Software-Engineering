@@ -1,23 +1,19 @@
 package com.disasterresponse.controller;
 
+import com.disasterresponse.model.SessionManager;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import com.disasterresponse.model.SessionManager;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import dao.DisasterDAO;
+import com.disasterresponse.model.Disaster;
+
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
 
 public class HomepageController {
 
@@ -28,55 +24,32 @@ public class HomepageController {
     @FXML
     private Button assistanceButton;
     @FXML
-    private Button viewDisastersButton; // Add button for viewing disasters
+    private Button viewDisastersButton; // Button to view disasters
     @FXML
     private Label welcomeLabel;
     @FXML
-    private VBox recentAlertsVBox; // Add VBox to display recent alerts
-     @FXML
-    private Button rescueRequestsButton; // New Button for Rescue Requests
+    private VBox recentAlertsVBox; // VBox to display recent alerts
+    @FXML
+    private Button rescueRequestsButton; // Button for Rescue Requests
 
     private String userRole;
     private String username;
 
-    private static final String CSV_FILE_PATH = "src/main/resources/com/csv/disaster_reports.csv";
+    private DisasterDAO disasterDAO = new DisasterDAO(); // DAO for database access
 
     public void initializePage() {
-        // Get user details from SessionManager
+        // Retrieve user session details
         this.username = SessionManager.getInstance().getUsername();
-        this.userRole = SessionManager.getInstance().getUserRole();
+        this.userRole = SessionManager.getInstance().getUserAccessLevel();
 
-        welcomeLabel.setText("Welcome " + this.username);  // Set welcome message with username
-        updateUIBasedOnRole();  // Setup the homepage based on the user's role
-        loadRecentAlerts();  // Load recent disaster alerts
-    }
+        // Set welcome message with username
+        welcomeLabel.setText("Welcome " + SessionManager.getInstance().getFullName());
 
-    @FXML
-    protected void handleLoginSuccess() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/disasterresponse/view/HomepageView.fxml"));
-            Parent root = loader.load();
+        // Update UI elements based on user role
+        updateUIBasedOnRole();
 
-            // Create the scene
-            Scene scene = new Scene(root);
-
-            // Get the stage and apply the scene
-            Stage stage = (Stage) welcomeLabel.getScene().getWindow();
-            stage.setScene(scene);
-
-            // Make the stage resizable
-            stage.setResizable(true);
-
-            // Set initial dimensions (but the user can resize it)
-            stage.setWidth(600);  // Set preferred width
-            stage.setHeight(700);  // Set preferred height
-
-            // Show the stage
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Load recent disaster alerts from the database
+        loadRecentAlerts();
     }
 
     private void updateUIBasedOnRole() {
@@ -90,7 +63,7 @@ public class HomepageController {
             generateReportsButton.setVisible(true);
             assistanceButton.setVisible(true);
             rescueRequestsButton.setVisible(false);
-        }else if ("Emergency Responders".equalsIgnoreCase(userRole)) {
+        } else if ("Emergency Responders".equalsIgnoreCase(userRole)) {
             manageUsersButton.setVisible(false);
             generateReportsButton.setVisible(false);
             assistanceButton.setVisible(false);
@@ -107,57 +80,38 @@ public class HomepageController {
     private void loadRecentAlerts() {
         recentAlertsVBox.getChildren().clear();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(CSV_FILE_PATH))) {
-            String line;
-            boolean isHeader = true;
-            List<String[]> recentDisasters = new ArrayList<>();
+        try {
+            // Get the latest 3 disasters from the database
+            List<Disaster> recentDisasters = disasterDAO.getLatestDisasters(3);
 
-            while ((line = reader.readLine()) != null) {
-                if (isHeader) {
-                    isHeader = false;
-                    continue;
-                }
-                String[] disasterDetails = line.split(",");
-                recentDisasters.add(disasterDetails);
-            }
-
-            // Display the latest 3 disasters
-            int count = Math.min(recentDisasters.size(), 3);
-            for (int i = recentDisasters.size() - 1; i >= recentDisasters.size() - count; i--) {
-                String[] disasterDetails = recentDisasters.get(i);
-
-                String location = disasterDetails[3];
-                String disasterType = disasterDetails[2];
-                String severity = disasterDetails[4];
-                String reportedTime = disasterDetails[6];
-
+            // Display the latest disasters
+            for (Disaster disaster : recentDisasters) {
                 VBox disasterBox = new VBox(5);
                 disasterBox.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10; -fx-background-radius: 5;");
 
                 // Location Label (Header)
-                Label locationLabel = new Label(location);
-                locationLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+                Label locationLabel = new Label(disaster.getLocation());
+                locationLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
 
                 // Disaster Type Label (Bold)
-                Label typeLabel = new Label("Disaster Type: " + disasterType);
-                typeLabel.setFont(Font.font("Arial", FontWeight.BOLD, 12));
+                Label typeLabel = new Label("Disaster Type: " + disaster.getType());
+                typeLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12px;");
 
                 // Severity Label with color based on severity
-                Label severityLabel = new Label(severity);
-                severityLabel.setFont(Font.font("Arial", 12));
+                Label severityLabel = new Label(disaster.getSeverity());
                 severityLabel.setStyle("-fx-background-radius: 5; -fx-padding: 2;");
-                setSeverityBackgroundColor(severityLabel, severity);
+                setSeverityBackgroundColor(severityLabel, disaster.getSeverity());
 
-                // Time Label in Italic
-                Label timeLabel = new Label(reportedTime);
-                timeLabel.setFont(Font.font("Arial", FontPosture.ITALIC, 12));
+                // Time Label
+                Label timeLabel = new Label("Reported: " + disaster.getReportedTime());
+                timeLabel.setStyle("-fx-font-style: italic;");
 
                 // Add labels to the VBox
                 disasterBox.getChildren().addAll(locationLabel, typeLabel, severityLabel, timeLabel);
                 recentAlertsVBox.getChildren().add(disasterBox);
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -206,6 +160,7 @@ public class HomepageController {
     protected void handleViewDisastersAction() { // Handle the button to view disasters
         loadView("/com/disasterresponse/view/ViewDisastersView.fxml");
     }
+
     @FXML
     protected void handleRescueRequestsAction() {
         loadView("/com/disasterresponse/view/RescueRequestsView.fxml");

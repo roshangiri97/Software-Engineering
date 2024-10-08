@@ -3,29 +3,40 @@ package com.disasterresponse.model;
 public class SessionManager {
 
     private static SessionManager instance;
+
     private String userId;
     private String username;
-    private String userRole;
+    private String userAccessLevel;
     private String fullName;
 
-    private SessionManager() {
-        // Private constructor to enforce singleton pattern
-    }
+    // Private constructor to prevent instantiation
+    private SessionManager() {}
 
-    public static synchronized SessionManager getInstance() {
+    // Singleton pattern: ensures only one instance of SessionManager exists
+    public static SessionManager getInstance() {
         if (instance == null) {
             instance = new SessionManager();
         }
         return instance;
     }
 
-    public void setLoggedInUser(String userId, String username, String userRole, String fullName) {
+    // Method to set the logged-in user details
+    public void setLoggedInUser(String userId, String username, String userAccessLevel, String fullName) {
         this.userId = userId;
         this.username = username;
-        this.userRole = userRole;
+        this.userAccessLevel = userAccessLevel;
         this.fullName = fullName;
     }
 
+    // Method to clear the session
+    public void clearSession() {
+        this.userId = null;
+        this.username = null;
+        this.userAccessLevel = null;
+        this.fullName = null;
+    }
+
+    // Getters for the session details
     public String getUserId() {
         return userId;
     }
@@ -34,18 +45,16 @@ public class SessionManager {
         return username;
     }
 
-    public String getUserRole() {
-        return userRole;
+    public String getUserAccessLevel() {
+        return userAccessLevel;
     }
 
     public String getFullName() {
         return fullName;
     }
 
-    public void clearSession() {
-        this.userId = null;
-        this.username = null;
-        this.userRole = null;
-        this.fullName = null;
+    // Check if a user is logged in
+    public boolean isLoggedIn() {
+        return userId != null;
     }
 }
