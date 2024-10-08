@@ -1,10 +1,8 @@
 package com.disasterresponse.controller;
 
-<<<<<<< HEAD
 import com.disasterresponse.model.Disaster;
-=======
-import com.disasterresponse.model.DatabaseConnection;
->>>>>>> IncidentReport
+import com.disasterresponse.DatabaseConnection;
+
 import com.disasterresponse.model.SessionManager;
 import dao.DisasterDAO;
 import javafx.fxml.FXML;
@@ -22,6 +20,8 @@ import java.time.format.DateTimeFormatter;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 public class ReportDisasterViewController {
 
@@ -38,6 +38,8 @@ public class ReportDisasterViewController {
     private TextArea commentsArea;
 
     private DisasterDAO disasterDAO = new DisasterDAO(); // DAO to handle database operations
+    @FXML
+    private Label successLabel;
 
     @FXML
     public void initialize() {

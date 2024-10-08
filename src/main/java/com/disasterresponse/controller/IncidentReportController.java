@@ -1,6 +1,6 @@
 package com.disasterresponse.controller;
 
-import com.disasterresponse.model.DatabaseConnection;
+import com.disasterresponse.DatabaseConnection;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;

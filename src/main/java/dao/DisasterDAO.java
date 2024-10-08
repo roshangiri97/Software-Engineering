@@ -12,12 +12,12 @@ import java.util.List;
 
 public class DisasterDAO {
 
-    private static final String INSERT_DISASTER_SQL = "INSERT INTO Disasters (location, type, severity, status, comment, reportedTime) VALUES (?, ?, ?, ?, ?, ?)";
-    private static final String SELECT_ALL_DISASTERS_SQL = "SELECT * FROM Disasters";
+    private static final String INSERT_DISASTER_SQL = "INSERT INTO disaster_reports (location, type, severity, status, comment, reportedTime) VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String SELECT_ALL_DISASTERS_SQL = "SELECT * FROM disaster_reports";
     
         public List<Disaster> getLatestDisasters(int limit) throws SQLException {
         List<Disaster> disasters = new ArrayList<>();
-        String sql = "SELECT * FROM Disasters ORDER BY reportedTime DESC LIMIT ?"; // Get the latest reports based on limit
+        String sql = "SELECT * FROM disaster_reports ORDER BY reportedTime DESC LIMIT ?"; // Get the latest reports based on limit
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {

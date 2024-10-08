@@ -1,9 +1,8 @@
 package com.disasterresponse.controller;
 
-<<<<<<< HEAD
-=======
-import com.disasterresponse.model.DatabaseConnection;
->>>>>>> IncidentReport
+
+import com.disasterresponse.DatabaseConnection;
+
 import com.disasterresponse.model.SessionManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +16,7 @@ import dao.DisasterDAO;
 import com.disasterresponse.model.Disaster;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.List;
 
 public class HomepageController {
@@ -85,9 +85,7 @@ public class HomepageController {
     // Loads recent alerts from the database
     private void loadRecentAlerts() {
         recentAlertsVBox.getChildren().clear();
-        String query = "SELECT * FROM disaster_reports ORDER BY reportedTime DESC LIMIT 3";
-
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
+        String query = "SELECT * FROM disaster_reports ORDER BY reportedTime DESC LIMIT 3";   
 
         try {
             // Get the latest 3 disasters from the database

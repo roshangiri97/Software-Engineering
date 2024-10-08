@@ -1,6 +1,6 @@
 package com.disasterresponse.controller;
 
-import com.disasterresponse.model.DatabaseConnection;
+import com.disasterresponse.DatabaseConnection;
 import com.disasterresponse.model.Disaster;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -119,21 +119,21 @@ public class ManageDisasterController {
 
     private void loadDisasterDataFromDatabase() {
         disasterData.clear();
-        String query = "SELECT Location, DisasterType, Severity, Status, Comments, reportedTime FROM disaster_reports";
+        String query = "SELECT location, type, severity, status, comment, reportedTime FROM disaster_reports";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                String location = rs.getString("Location");
-                String disasterType = rs.getString("DisasterType");
-                String severity = rs.getString("Severity");
-                String status = rs.getString("Status");
-                String comment = rs.getString("Comments");
+                String location = rs.getString("location");
+                String type = rs.getString("type");
+                String severity = rs.getString("severity");
+                String status = rs.getString("status");
+                String comment = rs.getString("comment");
                 String reportedTime = rs.getString("reportedTime");
 
-                disasterData.add(new Disaster(location, disasterType, severity, status, comment, reportedTime));
+                disasterData.add(new Disaster(location, type, severity, status, comment, reportedTime));
             }
 
         } catch (SQLException e) {
@@ -164,7 +164,7 @@ public class ManageDisasterController {
     }
 
     private void updateDisasterStatusInDatabase(Disaster updatedDisaster) {
-        String query = "UPDATE disaster_reports SET Status = ? WHERE Location = ? AND DisasterType = ?";
+        String query = "UPDATE disaster_reports SET status = ? WHERE location = ? AND type = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {

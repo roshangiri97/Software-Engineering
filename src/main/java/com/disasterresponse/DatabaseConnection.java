@@ -23,9 +23,10 @@ public class DatabaseConnection {
         return DriverManager.getConnection(URL + DB_NAME, USER, PASSWORD);
     }
 
-    // Method to create the database if it doesn't exist
+    // Method to create the database and tables if they don't exist
     private static void createDatabaseIfNotExists() {
         try (Connection connection = getServerConnection(); Statement statement = connection.createStatement()) {
+
             // Create the database if it doesn't exist
             String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS " + DB_NAME;
             statement.executeUpdate(createDatabaseSQL);
@@ -34,17 +35,56 @@ public class DatabaseConnection {
             String useDatabaseSQL = "USE " + DB_NAME;
             statement.executeUpdate(useDatabaseSQL);
 
-            // Create the Disasters table if it doesn't exist
-            String createTableSQL = "CREATE TABLE IF NOT EXISTS Disasters (" +
+            // Create the users table if it doesn't exist
+            String createUsersTableSQL = "CREATE TABLE IF NOT EXISTS users (" +
+                    "userId INT AUTO_INCREMENT PRIMARY KEY, " +
+                    "FullName VARCHAR(255), " +
+                    "Address VARCHAR(255), " +
+                    "PhoneNumber VARCHAR(50), " +
+                    "Username VARCHAR(100) UNIQUE, " +
+                    "Email VARCHAR(100) UNIQUE, " +
+                    "Password VARCHAR(255), " +
+                    "AccessLevel VARCHAR(50))";
+            statement.executeUpdate(createUsersTableSQL);
+
+            // Create the disaster_reports table if it doesn't exist
+            String createDisasterReportsTableSQL = "CREATE TABLE IF NOT EXISTS disaster_reports (" +
                     "id INT AUTO_INCREMENT PRIMARY KEY, " +
-                    "location VARCHAR(255) NOT NULL, " +
-                    "type VARCHAR(100) NOT NULL, " +
-                    "severity VARCHAR(50) NOT NULL, " +
-                    "status VARCHAR(50) NOT NULL, " +
+                    "userId INT, " +
+                    "type VARCHAR(255), " +
+                    "location VARCHAR(255), " +
+                    "severity VARCHAR(50), " +
                     "comment TEXT, " +
-                    "reportedTime DATETIME NOT NULL" +
-                    ")";
-            statement.executeUpdate(createTableSQL);
+                    "reportedTime DATETIME, " +
+                    "status VARCHAR(50), " +
+                    "FOREIGN KEY (userId) REFERENCES users(userId))";
+            statement.executeUpdate(createDisasterReportsTableSQL);
+
+            // Create the rescue_requests table if it doesn't exist
+            String createRescueRequestsTableSQL = "CREATE TABLE IF NOT EXISTS rescue_requests (" +
+                    "request_id INT AUTO_INCREMENT PRIMARY KEY, " +
+                    "location VARCHAR(255), " +
+                    "disasterType VARCHAR(100), " +
+                    "status VARCHAR(50), " +
+                    "departments TEXT, " +
+                    "additionalInstructions TEXT)";
+            statement.executeUpdate(createRescueRequestsTableSQL);
+
+            // Create the incident_reports table if it doesn't exist
+            String createIncidentReportsTableSQL = "CREATE TABLE IF NOT EXISTS incident_reports (" +
+                    "request_id INT AUTO_INCREMENT PRIMARY KEY, " +
+                    "location VARCHAR(255), " +
+                    "type VARCHAR(100), " +
+                    "evacuations INT, " +
+                    "rescued INT, " +
+                    "casualties INT, " +
+                    "property_damage TEXT, " +
+                    "infrastructure_impact TEXT, " +
+                    "relief_actions TEXT, " +
+                    "teams_involved TEXT, " +
+                    "witness_statement TEXT, " +
+                    "report_date DATE)";
+            statement.executeUpdate(createIncidentReportsTableSQL);
 
         } catch (SQLException e) {
             e.printStackTrace();

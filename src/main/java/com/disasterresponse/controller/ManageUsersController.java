@@ -1,6 +1,6 @@
 package com.disasterresponse.controller;
 
-import com.disasterresponse.model.DatabaseConnection;
+import com.disasterresponse.DatabaseConnection;
 import com.disasterresponse.model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

@@ -1,7 +1,6 @@
 package com.disasterresponse.controller;
 
 import com.disasterresponse.model.Disaster;
-import com.disasterresponse.model.SessionManager;
 import dao.DisasterDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -144,22 +143,22 @@ public class ViewDisastersController implements Initializable {
         }
     }
 
-    @FXML
-    protected void handleBackToHomeAction() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/disasterresponse/view/HomepageView.fxml"));
-            Parent root = loader.load();
-
-            // Re-initialize the homepage if returning
-            HomepageController controller = loader.getController();
-            controller.initializePage();
-
-            Stage stage = (Stage) disastersVBox.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    @FXML
+//    protected void handleBackToHomeAction() {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/disasterresponse/view/HomepageView.fxml"));
+//            Parent root = loader.load();
+//
+//            // Re-initialize the homepage if returning
+//            HomepageController controller = loader.getController();
+//            controller.initializePage();
+//
+//            Stage stage = (Stage) disastersVBox.getScene().getWindow();
+//            Scene scene = new Scene(root);
+//            stage.setScene(scene);
+//            stage.show();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
