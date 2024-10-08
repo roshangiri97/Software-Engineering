@@ -1,5 +1,9 @@
 package com.disasterresponse.controller;
 
+<<<<<<< HEAD
+=======
+import com.disasterresponse.model.DatabaseConnection;
+>>>>>>> IncidentReport
 import com.disasterresponse.model.SessionManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -52,6 +56,7 @@ public class HomepageController {
         loadRecentAlerts();
     }
 
+    // Hides or shows buttons based on user roles
     private void updateUIBasedOnRole() {
         if ("Admin".equalsIgnoreCase(userRole)) {
             manageUsersButton.setVisible(true);
@@ -77,8 +82,12 @@ public class HomepageController {
         }
     }
 
+    // Loads recent alerts from the database
     private void loadRecentAlerts() {
         recentAlertsVBox.getChildren().clear();
+        String query = "SELECT * FROM disaster_reports ORDER BY reportedTime DESC LIMIT 3";
+
+        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
 
         try {
             // Get the latest 3 disasters from the database
@@ -106,7 +115,6 @@ public class HomepageController {
                 Label timeLabel = new Label("Reported: " + disaster.getReportedTime());
                 timeLabel.setStyle("-fx-font-style: italic;");
 
-                // Add labels to the VBox
                 disasterBox.getChildren().addAll(locationLabel, typeLabel, severityLabel, timeLabel);
                 recentAlertsVBox.getChildren().add(disasterBox);
             }
@@ -116,6 +124,7 @@ public class HomepageController {
         }
     }
 
+    // Sets background color based on severity of the disaster
     private void setSeverityBackgroundColor(Label label, String severity) {
         switch (severity.toLowerCase()) {
             case "critical":
@@ -135,6 +144,8 @@ public class HomepageController {
                 break;
         }
     }
+
+    // Handlers for the buttons and actions
 
     @FXML
     protected void handleReportDisasterAction() {
@@ -157,7 +168,7 @@ public class HomepageController {
     }
 
     @FXML
-    protected void handleViewDisastersAction() { // Handle the button to view disasters
+    protected void handleViewDisastersAction() {
         loadView("/com/disasterresponse/view/ViewDisastersView.fxml");
     }
 
@@ -168,29 +179,22 @@ public class HomepageController {
 
     @FXML
     protected void handleLogoutAction() {
-        // Clear session and go back to login
         SessionManager.getInstance().clearSession();
         loadView("/com/disasterresponse/view/LoginView.fxml");
     }
 
+    // Utility method to load a new view (FXML)
     private void loadView(String viewPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(viewPath));
             Parent root = loader.load();
 
-            // Re-initialize the homepage if returning
-            if (viewPath.equals("/com/disasterresponse/view/HomepageView.fxml")) {
-                HomepageController controller = loader.getController();
-                controller.initializePage();  // Make sure to reinitialize the homepage
-            }
-
             Stage stage = (Stage) welcomeLabel.getScene().getWindow();
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Error loading view: " + viewPath);
+        } catch (Exception e) {
+            System.err.println("Error loading view: " + viewPath + ", Error: " + e.getMessage());
         }
     }
 }

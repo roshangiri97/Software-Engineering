@@ -8,6 +8,7 @@ com\disasterresponse\controller\ManageDisasterController.class
 dao\DisasterDAO.class
 module-info.class
 com\disasterresponse\model\User.class
+com\disasterresponse\model\DatabaseConnection.class
 com\disasterresponse\model\Disaster.class
 com\disasterresponse\controller\HomepageController.class
 com\disasterresponse\controller\IncidentReportController.class

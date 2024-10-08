@@ -7,13 +7,13 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox alignment="TOP_LEFT" prefHeight="512.0" prefWidth="954.0" spacing="10" style="-fx-padding: 20;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.disasterresponse.controller.ManageDisasterController">
-    
+
     <!-- Back Button -->
     <Button fx:id="backButton" onAction="#handleBackAction" text="Back" />
-    
+
     <!-- ComboBox for Sorting Options -->
     <ComboBox fx:id="sortComboBox" promptText="Sort by" style="-fx-background-color: #a6a4a4;" />
-    
+
     <!-- TableView for Disaster Data -->
     <TableView fx:id="disasterTable" prefHeight="400" prefWidth="600">
         <columns>

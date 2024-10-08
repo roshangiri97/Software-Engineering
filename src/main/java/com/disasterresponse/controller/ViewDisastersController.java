@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -108,7 +109,7 @@ public class ViewDisastersController implements Initializable {
                 label.setStyle(label.getStyle() + "-fx-background-color: red; -fx-text-fill: white;");
                 break;
             case "high":
-                label.setStyle(label.getStyle() + "-fx-background-color: orange; -fx-text-fill: black;");
+                label.setStyle(label.getStyle() + "-fx-background-color: orange; -fx-text-fill: white;");
                 break;
             case "medium":
                 label.setStyle(label.getStyle() + "-fx-background-color: yellow; -fx-text-fill: black;");
@@ -140,6 +141,25 @@ public class ViewDisastersController implements Initializable {
             default:
                 label.setStyle(label.getStyle() + "-fx-background-color: none; -fx-text-fill: black;");
                 break;
+        }
+    }
+
+    @FXML
+    protected void handleBackToHomeAction() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/disasterresponse/view/HomepageView.fxml"));
+            Parent root = loader.load();
+
+            // Re-initialize the homepage if returning
+            HomepageController controller = loader.getController();
+            controller.initializePage();
+
+            Stage stage = (Stage) disastersVBox.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

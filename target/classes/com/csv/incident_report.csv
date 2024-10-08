@@ -1,5 +1,0 @@
-request_id,location,type,evacuations,rescued,casualties,property_damage,infrastructure_impact,relief_actions,teams_involved,witness_statement,report_date
-1,kent street,Fire,2,3,2,some,some,all,Fire Department;EMS;Police;Environmental Agencies,blah,2024-09-10
-2,circular quay,Hurricane,20,25,5,station and road,some buildings,first aid done. ambulance used for emergencies.,EMS;Utilities;Meteorology;Evacuation Authorities,asdsasdadvadv.adsfdvssdsada,2024-09-10
-5,asddvdfeefdsdfad,Fire,3,4,5,sadasda,dasdasda,dasdasdasd,Fire Department;EMS;Police;Environmental Agencies,fasadasdadsasd,2024-09-10
-1,kent street,Fire,25,20,2,buildings and vehicles,electical pole,first aid and ambulance service,Fire Department;EMS;Police;Environmental Agencies,fire due to elecric short circuit,2024-09-11

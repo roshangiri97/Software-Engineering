@@ -1,25 +1,29 @@
 package com.disasterresponse.controller;
 
+<<<<<<< HEAD
 import com.disasterresponse.model.Disaster;
+=======
+import com.disasterresponse.model.DatabaseConnection;
+>>>>>>> IncidentReport
 import com.disasterresponse.model.SessionManager;
 import dao.DisasterDAO;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javafx.scene.Parent;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ResourceBundle;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 
-public class ReportDisasterViewController implements Initializable {
+public class ReportDisasterViewController {
 
     @FXML
     private ComboBox<String> disasterTypeComboBox;
@@ -35,11 +39,15 @@ public class ReportDisasterViewController implements Initializable {
 
     private DisasterDAO disasterDAO = new DisasterDAO(); // DAO to handle database operations
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        // Initialize ComboBox values for disaster types and severity levels
+    @FXML
+    public void initialize() {
+        // Populate ComboBox with pre-defined disaster types and severity levels
         disasterTypeComboBox.getItems().addAll("Hurricane", "Fire", "Earthquake", "Flood", "Medical", "Other");
         severityComboBox.getItems().addAll("Low", "Medium", "High", "Critical");
+
+        // Ensure ComboBox defaults to the first option
+        disasterTypeComboBox.setValue("Hurricane");
+        severityComboBox.setValue("Medium");
     }
 
     @FXML
@@ -49,12 +57,10 @@ public class ReportDisasterViewController implements Initializable {
         String severity = severityComboBox.getValue();
         String comments = commentsArea.getText().trim();
 
+        // Validate that mandatory fields are not empty
         if (disasterType == null || location.isEmpty() || severity == null) {
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Missing Information");
-            alert.setContentText("Please fill in all the required fields.");
-            alert.showAndWait();
+            successLabel.setText("Error: Please fill in all the required fields.");
+            successLabel.setStyle("-fx-text-fill: red;");  // Show error in red
         } else {
             saveDisasterReport(disasterType, location, severity, comments);
         }
@@ -82,6 +88,9 @@ public class ReportDisasterViewController implements Initializable {
             alert.setContentText("Disaster report submitted successfully!");
             alert.showAndWait();
 
+            // Show success message and clear fields
+            successLabel.setText("Success: Disaster report submitted.");
+            successLabel.setStyle("-fx-text-fill: green;");
             clearFields();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -94,27 +103,34 @@ public class ReportDisasterViewController implements Initializable {
     }
 
     private void clearFields() {
-        disasterTypeComboBox.setValue(null);
+        // Reset input fields after successful submission
+        disasterTypeComboBox.setValue("Hurricane");
         locationField.clear();
-        severityComboBox.setValue(null);
+        severityComboBox.setValue("Medium");
         commentsArea.clear();
     }
 
     @FXML
-    protected void handleCancelAction() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/disasterresponse/view/HomepageView.fxml"));
-            Parent root = loader.load();
+protected void handleCancelAction() {
+    try {
+        // Load the homepage view when the cancel button is pressed
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/disasterresponse/view/HomepageView.fxml"));
+        Parent root = loader.load();
 
-            HomepageController controller = loader.getController();
-            controller.initializePage();
+        // Get the controller of the loaded homepage and initialize it with session data
+        HomepageController homepageController = loader.getController();
+        homepageController.initializePage();
 
-            Stage stage = (Stage) disasterTypeComboBox.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Get the current stage (window) and set the homepage scene
+        Stage stage = (Stage) disasterTypeComboBox.getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    } catch (Exception e) {
+        e.printStackTrace();
+        System.err.println("Error loading homepage view: " + e.getMessage());
     }
+}
+
+
 }
