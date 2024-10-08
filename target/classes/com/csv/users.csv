@@ -1,0 +1,10 @@
+userId,FullName,Address,PhoneNumber,Username,Email,Password,AccessLevel
+1,roshan,riverwood,61405079956,Roshan,roshan@mail.com,roshan@123,Public
+2,ram,kaima,48525841255,ram,ram@gmail.com,ram123,admin
+5,alesh,dfdsfsda,48962156325,alesh,alesh@gmail.com,alesh123,Agencies or Organization
+6,upen,concord,48963252523,upen,upen@gmail.com,upen123,Emergency Responders
+7,mouse,manaa,48962458625,mouse,mouse@gmail.com,mouse123,Public
+8,mobile,aasasfaf,456325241,mobile,mobile@gmail.com,mobile123,Emergency Responders
+9,let,bhjukaasd,85265236526,let,let@asd.com,let@12345,Agencies or Organization
+10,candle,asdfsfa,48521563251,candle,candle@gmail.com,candle123,Emergency Responders
+11,admin,townhall,4.52E+12,admin,admin@gmail.com,admin123,admin

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.disasterresponse.controller.ViewDisastersController">
+    <!-- Top Section with Back Button -->
+    <top>
+        <VBox spacing="10" style="-fx-padding: 10;" BorderPane.alignment="CENTER_LEFT">
+            <Button alignment="TOP_LEFT" onAction="#handleBackToHomeAction" text="Back" />
+        </VBox>
+    </top>
+
+    <!-- Center Section for Disaster List with ScrollPane -->
+    <center>
+        <ScrollPane fitToWidth="true" prefHeight="700" style="-fx-padding: 20;"> <!-- Set preferred height to limit the viewable area -->
+            <VBox fx:id="disastersVBox" alignment="CENTER" spacing="10" style="-fx-background-color: #d1d1d1;" />
+        </ScrollPane>
+    </center>
+
+    <padding>
+        <Insets bottom="10" left="10" right="10" top="10" />
+    </padding>
+</BorderPane>

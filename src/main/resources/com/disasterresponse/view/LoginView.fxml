@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.disasterresponse.controller.LoginController">
+    
+    <!-- Center Section -->
+    <center>
+        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 40;">
+            
+            <!-- Logo Section -->
+            <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="DisasterResponse" />
+            <Label style="-fx-font-size: 18px;" text="Login" />
+
+            <!-- Username Field -->
+            <TextField fx:id="usernameField" promptText="Username" style="-fx-padding: 10; -fx-background-radius: 8px;" />
+
+            <!-- Password Field -->
+            <PasswordField fx:id="passwordField" promptText="Password" style="-fx-padding: 10; -fx-background-radius: 8px;" />
+
+            <!-- Error Message Label -->
+            <Label fx:id="errorMessageLabel" textFill="red" visible="false" />
+
+            <!-- Login Button -->
+            <Button maxWidth="200" onAction="#handleLoginAction" style="-fx-background-color: #000000; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 8px;" text="Login" />
+
+            <!-- Forgot Password and Register Links -->
+            <VBox alignment="CENTER" prefHeight="49.0" prefWidth="198.0" spacing="5">
+                <Hyperlink onAction="#handleForgotPasswordAction" text="Forgot Password?" />
+                <Hyperlink onAction="#handleSignupAction" style="-fx-background-color: #615f5f; -fx-background-radius: 8px;" text="Register" textFill="#faf8f8" />
+            </VBox>
+        </VBox>
+    </center>
+
+    <padding>
+        <Insets bottom="20" left="20" right="20" top="20" />
+    </padding>
+</BorderPane>
