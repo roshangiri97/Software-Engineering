@@ -12,4 +12,5 @@ module com.disasterresponse {
     exports com.disasterresponse;
     exports com.disasterresponse.controller;
     exports com.disasterresponse.model;
+        requires java.sql;
 }

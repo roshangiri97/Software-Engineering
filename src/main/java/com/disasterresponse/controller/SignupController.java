@@ -1,5 +1,6 @@
 package com.disasterresponse.controller;
 
+import com.disasterresponse.model.DatabaseConnection;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -10,12 +11,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class SignupController {
 
@@ -38,8 +36,6 @@ public class SignupController {
     @FXML
     private Label errorMessageLabel;
 
-    private static final String CSV_FILE_PATH = "src/main/resources/com/csv/users.csv";
-
     @FXML
     public void initialize() {
         roleComboBox.getItems().addAll("Agencies or Organization", "Emergency Responders", "Public");
@@ -56,70 +52,36 @@ public class SignupController {
         String confirmPassword = confirmPasswordField.getText();
         String selectedRole = roleComboBox.getValue();
 
-        if (selectedRole == null) {
+        if (selectedRole == null || !password.equals(confirmPassword)) {
             errorMessageLabel.setVisible(true);
-            errorMessageLabel.setText("Please select a role.");
+            errorMessageLabel.setText("Please fill in all the required fields and match passwords.");
             return;
         }
 
-        if (!password.equals(confirmPassword)) {
-            errorMessageLabel.setVisible(true);
-            errorMessageLabel.setText("Passwords do not match.");
-            return;
-        }
+        saveUser(fullName, address, phone, username, email, password, selectedRole);
+    }
 
-        try {
-            appendUserToCSV(fullName, address, phone, username, email, password, selectedRole);
+    private void saveUser(String fullName, String address, String phone, String username, String email, String password, String accessLevel) {
+        String query = "INSERT INTO users (FullName, Address, PhoneNumber, Username, Email, Password, AccessLevel) " +
+                       "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, fullName);
+            stmt.setString(2, address);
+            stmt.setString(3, phone);
+            stmt.setString(4, username);
+            stmt.setString(5, email);
+            stmt.setString(6, password);
+            stmt.setString(7, accessLevel);
+
+            stmt.executeUpdate();
+
             loadLoginView();
-        } catch (IOException e) {
-            e.printStackTrace();
-            errorMessageLabel.setVisible(true);
-            errorMessageLabel.setText("Error saving user data.");
-        }
-    }
-
-    private void appendUserToCSV(String fullName, String address, String phone, String username, String email, String password, String accessLevel) throws IOException {
-        File csvFile = new File(CSV_FILE_PATH);
-
-        boolean fileExists = csvFile.exists();
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(CSV_FILE_PATH, true))) {
-            if (!fileExists) {
-                writer.write("userId,FullName,Address,PhoneNumber,Username,Email,Password,AccessLevel");
-                writer.newLine();
-            }
-
-            int userId = generateUserId();
-            writer.write(userId + "," + fullName + "," + address + "," + phone + "," + username + "," + email + "," + password + "," + accessLevel);
-            writer.newLine();
-            writer.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw e;
-        }
-    }
-
-    private int generateUserId() {
-        int maxUserId = 0;
-        try (BufferedReader reader = new BufferedReader(new FileReader(CSV_FILE_PATH))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] userDetails = line.split(",");
-                if (userDetails.length > 0) {
-                    try {
-                        int currentUserId = Integer.parseInt(userDetails[0].trim());
-                        if (currentUserId > maxUserId) {
-                            maxUserId = currentUserId;
-                        }
-                    } catch (NumberFormatException e) {
-                        System.err.println("Invalid userId format: " + userDetails[0]);
-                    }
-                }
-            }
-        } catch (IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return maxUserId + 1;
     }
 
     private void loadLoginView() {
@@ -130,23 +92,13 @@ public class SignupController {
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Error loading login view.");
         }
     }
 
     @FXML
     protected void handleBackAction() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/disasterresponse/view/LoginView.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) fullNameField.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        loadLoginView();
     }
 }

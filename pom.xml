@@ -56,6 +56,12 @@
             <version>4.0.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>  <!-- Make sure to use a compatible version -->
+        </dependency>
+
 
     </dependencies>
     <build>

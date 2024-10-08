@@ -18,26 +18,19 @@
         <HBox spacing="20" style="-fx-padding: 10; -fx-background-color: #f8f8f8;" BorderPane.alignment="CENTER_LEFT">
             <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="DisasterResponse" />
             <HBox spacing="10" BorderPane.alignment="CENTER_RIGHT">
-                <Label fx:id="welcomeLabel" style="-fx-font-size: 14px; -fx-background-color: #bebfed; -fx-label-padding: 2px;" text="Welcome ">
-               <HBox.margin>
-                  <Insets left="220.0" />
-               </HBox.margin>
-            </Label>
+                <Label fx:id="welcomeLabel" style="-fx-font-size: 14px; -fx-background-color: #bebfed; -fx-padding: 5;" text="Welcome, User"/>
+                <Button onAction="#handleLogoutAction" style="-fx-background-color: #b84840; -fx-text-fill: white;" text="Logout"/>
             </HBox>
-             <Button alignment="TOP_RIGHT" onAction="#handleLogoutAction" style="-fx-background-color: #b84840;" text="Logout">
-            <HBox.margin>
-               <Insets />
-            </HBox.margin>
-         </Button>
         </HBox>
     </top>
 
     <!-- Center Section for Emergency Contacts, Alerts, and Quick Actions -->
     <center>
-        <ScrollPane fitToWidth="true" prefHeight="700" prefWidth="600"> <!-- This adds scroll to the center -->
+        <ScrollPane fitToWidth="true" prefHeight="700" prefWidth="600">
+            <!-- VBox Container -->
             <VBox alignment="CENTER" spacing="20" style="-fx-padding: 20;">
                 
-                <!-- Emergency Contacts -->
+                <!-- Emergency Contacts Section -->
                 <VBox spacing="10" style="-fx-background-color: #d3d3d3; -fx-padding: 10; -fx-background-radius: 10;">
                     <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Emergency Contacts" />
                     <GridPane hgap="10" vgap="10">
@@ -47,36 +40,28 @@
                         <Label text="098-765-4321" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label text="Medical Emergency" GridPane.columnIndex="0" GridPane.rowIndex="2" />
                         <Label text="112" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <columnConstraints>
-                     <ColumnConstraints />
-                     <ColumnConstraints />
-                  </columnConstraints>
-                  <rowConstraints>
-                     <RowConstraints />
-                     <RowConstraints />
-                     <RowConstraints />
-                  </rowConstraints>
                     </GridPane>
                 </VBox>
 
-                <!-- Recent Alerts -->
+                <!-- Recent Alerts Section -->
                 <VBox spacing="10" style="-fx-background-color: #d3d3d3; -fx-padding: 10; -fx-background-radius: 10;">
                     <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Recent Alerts" />
-                    <VBox fx:id="recentAlertsVBox" spacing="10" /> <!-- This is where the recent alerts will be loaded dynamically -->
+                    <VBox fx:id="recentAlertsVBox" spacing="10"/>
                 </VBox>
 
-                <!-- Quick Actions -->
+                <!-- Quick Actions Section -->
                 <VBox spacing="10" style="-fx-background-color: #d3d3d3; -fx-padding: 10; -fx-background-radius: 10;">
                     <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Quick Actions" />
                     <Button fx:id="reportDisasterButton" onAction="#handleReportDisasterAction" style="-fx-background-color: #000000; -fx-text-fill: white;" text="Report a Disaster" />
                     <Button fx:id="viewDisastersButton" onAction="#handleViewDisastersAction" style="-fx-background-color: #000000; -fx-text-fill: white;" text="View Disasters" />
-                    <Button fx:id="assistanceButton" onAction="#handleImmediateAssistanceAction" text="Manage Disasters" visible="false" />
-                    <Button fx:id="rescueRequestsButton" onAction="#handleRescueRequestsAction" text="Rescue Requests" visible="false" />
-                    <Button fx:id="generateReportsButton" onAction="#handleGenerateReportsAction" text="View Reports" />
-                    <Button fx:id="manageUsersButton" onAction="#handleManageUsersAction" text="Manage Users" visible="false" />
+                    <Button fx:id="assistanceButton" onAction="#handleImmediateAssistanceAction" text="Manage Disasters" visible="false"/>
+                    <Button fx:id="rescueRequestsButton" onAction="#handleRescueRequestsAction" text="Rescue Requests" visible="false"/>
+                    <Button fx:id="generateReportsButton" onAction="#handleGenerateReportsAction" style="-fx-background-color: #000000; -fx-text-fill: white;" text="View Reports" />
+                    <Button fx:id="manageUsersButton" onAction="#handleManageUsersAction" style="-fx-background-color: #000000; -fx-text-fill: white;" text="Manage Users" visible="false"/>
                 </VBox>
 
             </VBox>
         </ScrollPane>
     </center>
+    
 </BorderPane>

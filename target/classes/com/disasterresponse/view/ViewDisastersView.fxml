@@ -17,7 +17,7 @@
     <!-- Center Section for Disaster List with ScrollPane -->
     <center>
         <ScrollPane fitToWidth="true" prefHeight="700" style="-fx-padding: 20;"> <!-- Set preferred height to limit the viewable area -->
-            <VBox fx:id="disastersVBox" alignment="CENTER" spacing="10" style="-fx-background-color: #d1d1d1;" />
+            <VBox fx:id="disastersVBox" prefHeight="600" prefWidth="600" alignment="CENTER" spacing="10" style="-fx-background-color: #d1d1d1;" />
         </ScrollPane>
     </center>
 

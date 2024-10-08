@@ -1,22 +1,24 @@
 package com.disasterresponse.controller;
 
+import com.disasterresponse.model.DatabaseConnection;
 import com.disasterresponse.model.SessionManager;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javafx.scene.Parent;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 
-import java.io.*;
-import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ResourceBundle;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 
-public class ReportDisasterViewController implements Initializable {
+public class ReportDisasterViewController {
 
     @FXML
     private ComboBox<String> disasterTypeComboBox;
@@ -30,13 +32,18 @@ public class ReportDisasterViewController implements Initializable {
     @FXML
     private TextArea commentsArea;
 
-    private static final String CSV_FILE_PATH = "src/main/resources/com/csv/disaster_reports.csv";
+    @FXML
+    private Label successLabel;  // Ensure this is added in FXML
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        // Initialize ComboBox values for disaster types and severity levels
+    @FXML
+    public void initialize() {
+        // Populate ComboBox with pre-defined disaster types and severity levels
         disasterTypeComboBox.getItems().addAll("Hurricane", "Fire", "Earthquake", "Flood", "Medical", "Other");
         severityComboBox.getItems().addAll("Low", "Medium", "High", "Critical");
+
+        // Ensure ComboBox defaults to the first option
+        disasterTypeComboBox.setValue("Hurricane");
+        severityComboBox.setValue("Medium");
     }
 
     @FXML
@@ -46,109 +53,80 @@ public class ReportDisasterViewController implements Initializable {
         String severity = severityComboBox.getValue();
         String comments = commentsArea.getText().trim();
 
+        // Validate that mandatory fields are not empty
         if (disasterType == null || location.isEmpty() || severity == null) {
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Missing Information");
-            alert.setContentText("Please fill in all the required fields.");
-            alert.showAndWait();
+            successLabel.setText("Error: Please fill in all the required fields.");
+            successLabel.setStyle("-fx-text-fill: red;");  // Show error in red
         } else {
             saveDisasterReport(disasterType, location, severity, comments);
         }
     }
 
-    private void saveDisasterReport(String DisasterType, String Location, String Severity, String Comments) {
-        File file = new File(CSV_FILE_PATH);
+    private void saveDisasterReport(String disasterType, String location, String severity, String comments) {
+        String query = "INSERT INTO disaster_reports (userId, DisasterType, Location, Severity, Comments, reportedTime, status) " +
+                       "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        if (!file.exists()) {
-            System.out.println("CSV file does not exist at: " + file.getAbsolutePath());
-        }
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
-            // Generate a unique disaster ID
-            int disasterId = generateDisasterId();
-
-            // Get the currently logged-in user's ID from SessionManager
+            // Fetching current user information from session
             String userId = SessionManager.getInstance().getUserId();
-
-            // Get the current timestamp
             String reportedTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
-            // Default status is "Active"
             String status = "Active";
 
-            // Write the disaster report to the CSV file in the correct column order
-            writer.write(disasterId + "," + userId + "," + DisasterType + "," + Location + "," + Severity + "," + Comments + "," + reportedTime + "," + status);
-            writer.newLine();
-            writer.flush(); // Ensure the data is written to the file
+            // Bind parameters
+            stmt.setString(1, userId);
+            stmt.setString(2, disasterType);
+            stmt.setString(3, location);
+            stmt.setString(4, severity);
+            stmt.setString(5, comments);
+            stmt.setString(6, reportedTime);
+            stmt.setString(7, status);
 
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setTitle("Success");
-            alert.setHeaderText(null);
-            alert.setContentText("Disaster report submitted successfully!");
-            alert.showAndWait();
+            // Execute the query
+            stmt.executeUpdate();
 
+            // Show success message and clear fields
+            successLabel.setText("Success: Disaster report submitted.");
+            successLabel.setStyle("-fx-text-fill: green;");
             clearFields();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("File Error");
-            alert.setContentText("An error occurred while saving the disaster report.");
-            alert.showAndWait();
-        }
-    }
 
-    private int generateDisasterId() {
-        int maxDisasterId = 0; // Start with 0 and increment based on existing disaster IDs
-        try (BufferedReader reader = new BufferedReader(new FileReader(CSV_FILE_PATH))) {
-            String line;
-            boolean isFirstLine = true; // Skip header line
-            while ((line = reader.readLine()) != null) {
-                if (isFirstLine) {
-                    isFirstLine = false;
-                    continue;
-                }
-                String[] disasterDetails = line.split(",");
-                if (disasterDetails.length > 0) {
-                    try {
-                        int currentDisasterId = Integer.parseInt(disasterDetails[0].trim());
-                        if (currentDisasterId > maxDisasterId) {
-                            maxDisasterId = currentDisasterId;
-                        }
-                    } catch (NumberFormatException e) {
-                        System.err.println("Invalid disasterId format: " + disasterDetails[0]);
-                    }
-                }
-            }
-        } catch (IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+            successLabel.setText("Error: Could not submit disaster report.");
+            successLabel.setStyle("-fx-text-fill: red;");
         }
-        return maxDisasterId + 1; // Increment the highest found disasterId by 1 for the new report
     }
 
     private void clearFields() {
-        disasterTypeComboBox.setValue(null);
+        // Reset input fields after successful submission
+        disasterTypeComboBox.setValue("Hurricane");
         locationField.clear();
-        severityComboBox.setValue(null);
+        severityComboBox.setValue("Medium");
         commentsArea.clear();
     }
 
     @FXML
-    protected void handleCancelAction() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/disasterresponse/view/HomepageView.fxml"));
-            Parent root = loader.load();
+protected void handleCancelAction() {
+    try {
+        // Load the homepage view when the cancel button is pressed
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/disasterresponse/view/HomepageView.fxml"));
+        Parent root = loader.load();
 
-            HomepageController controller = loader.getController();
-            controller.initializePage();
+        // Get the controller of the loaded homepage and initialize it with session data
+        HomepageController homepageController = loader.getController();
+        homepageController.initializePage();
 
-            Stage stage = (Stage) disasterTypeComboBox.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Get the current stage (window) and set the homepage scene
+        Stage stage = (Stage) disasterTypeComboBox.getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    } catch (Exception e) {
+        e.printStackTrace();
+        System.err.println("Error loading homepage view: " + e.getMessage());
     }
+}
+
+
 }

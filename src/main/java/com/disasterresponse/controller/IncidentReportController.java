@@ -1,16 +1,15 @@
 package com.disasterresponse.controller;
 
+import com.disasterresponse.model.DatabaseConnection;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.time.LocalDate;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class IncidentReportController {
 
@@ -37,37 +36,33 @@ public class IncidentReportController {
     @FXML
     private TextField reportDateField;
 
-    private String requestId;  // To store the request ID passed from RescueRequestsController
-    private static final String RESCUE_REQUESTS_CSV_FILE = "src/main/resources/com/csv/rescue_requests.csv";
-    private static final String INCIDENT_REPORT_CSV_FILE = "src/main/resources/com/csv/incident_report.csv";
+    private String requestId;
 
+    // Method to initialize the form with data for the given request ID
     public void initializeForm(String requestId) {
         this.requestId = requestId;
         loadRescueRequestData(requestId);
 
-        // Prefill the report date with the current date
-        reportDateField.setText(LocalDate.now().toString());
+        // Optionally, you can prefill the report date with the current date
+        reportDateField.setText(java.time.LocalDate.now().toString());
     }
 
     private void loadRescueRequestData(String requestId) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(RESCUE_REQUESTS_CSV_FILE))) {
-            String line;
-            boolean isHeader = true;
-            while ((line = reader.readLine()) != null) {
-                if (isHeader) {
-                    isHeader = false;
-                    continue;  // Skip the header line
-                }
+        String query = "SELECT * FROM rescue_requests WHERE request_id = ?";
 
-                String[] fields = line.split(",");
-                if (fields.length >= 6 && fields[0].equals(requestId)) {
-                    locationField.setText(fields[1]);  // Prefill location
-                    typeField.setText(fields[2]);      // Prefill disaster type
-                    teamsInvolvedField.setText(fields[4]);  // Prefill teams involved
-                    break;
-                }
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, requestId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                locationField.setText(rs.getString("location"));
+                typeField.setText(rs.getString("disasterType"));
+                teamsInvolvedField.setText(rs.getString("departments"));
             }
-        } catch (IOException e) {
+
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -86,18 +81,36 @@ public class IncidentReportController {
         String witnessStatement = witnessStatementField.getText();
         String reportDate = reportDateField.getText();
 
-        // Save the incident report to the CSV file
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(INCIDENT_REPORT_CSV_FILE, true))) {
-            writer.write(requestId + "," + location + "," + type + "," + evacuations + "," + rescued + "," + casualties + ","
-                    + propertyDamage + "," + infrastructureImpact + "," + reliefActions + "," + teamsInvolved + ","
-                    + witnessStatement + "," + reportDate);
-            writer.newLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        saveIncidentReport(requestId, location, type, evacuations, rescued, casualties, propertyDamage, infrastructureImpact, reliefActions, teamsInvolved, witnessStatement, reportDate);
 
-        // Close the form after submitting the report
         Stage stage = (Stage) reportDateField.getScene().getWindow();
         stage.close();
+    }
+
+    private void saveIncidentReport(String requestId, String location, String type, String evacuations, String rescued, String casualties, String propertyDamage, String infrastructureImpact, String reliefActions, String teamsInvolved, String witnessStatement, String reportDate) {
+        String query = "INSERT INTO incident_reports (request_id, location, type, evacuations, rescued, casualties, property_damage, infrastructure_impact, relief_actions, teams_involved, witness_statement, report_date) " +
+                       "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, requestId);
+            stmt.setString(2, location);
+            stmt.setString(3, type);
+            stmt.setString(4, evacuations);
+            stmt.setString(5, rescued);
+            stmt.setString(6, casualties);
+            stmt.setString(7, propertyDamage);
+            stmt.setString(8, infrastructureImpact);
+            stmt.setString(9, reliefActions);
+            stmt.setString(10, teamsInvolved);
+            stmt.setString(11, witnessStatement);
+            stmt.setString(12, reportDate);
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
