@@ -1,5 +1,6 @@
 com\disasterresponse\controller\ManageUsersController.class
 com\disasterresponse\controller\SignupController.class
+dao\IncidentReportDAO.class
 com\disasterresponse\controller\ViewReportsController.class
 com\disasterresponse\App.class
 com\disasterresponse\controller\ForgotPasswordController.class
@@ -8,10 +9,12 @@ com\disasterresponse\controller\ManageDisasterController.class
 dao\DisasterDAO.class
 module-info.class
 com\disasterresponse\model\User.class
+dao\UserDAO.class
 com\disasterresponse\model\DatabaseConnection.class
 com\disasterresponse\model\Disaster.class
 com\disasterresponse\controller\HomepageController.class
 com\disasterresponse\controller\IncidentReportController.class
+com\disasterresponse\model\IncidentReport.class
 com\disasterresponse\controller\SendAssistanceController.class
 com\disasterresponse\controller\ManageDisasterController$1.class
 com\disasterresponse\controller\ReportDisasterViewController.class

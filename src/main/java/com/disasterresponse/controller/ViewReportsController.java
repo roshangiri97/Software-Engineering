@@ -1,7 +1,8 @@
 package com.disasterresponse.controller;
 
 import com.disasterresponse.model.Disaster;
-import dao.DisasterDAO;
+import com.disasterresponse.model.IncidentReport;
+import dao.IncidentReportDAO;
 import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -21,7 +22,7 @@ public class ViewReportsController {
     @FXML
     private VBox reportsVBox; // VBox to hold the list of reports
 
-    private DisasterDAO disasterDAO = new DisasterDAO(); // DAO to interact with the database
+    private IncidentReportDAO incidentReportDAO = new IncidentReportDAO(); // DAO to interact with the database
 
     @FXML
     public void initialize() {
@@ -30,36 +31,30 @@ public class ViewReportsController {
 
     private void loadIncidentReportsData() {
         reportsVBox.getChildren().clear(); // Clear any previous entries
-
-        try {
-            // Fetch all disasters from the database using the DAO
-            List<Disaster> disasterList = disasterDAO.getAllDisasters();
-
-            // Loop through each disaster and display it in the UI
-            for (Disaster disaster : disasterList) {
-                VBox reportBox = new VBox(5);
-                reportBox.setStyle("-fx-background-color: #e0e0e0; -fx-padding: 15; -fx-background-radius: 10;");
-
-                // Title label for report ID, bold and bigger font
-                Label locationLabel = new Label("Location: " + disaster.getLocation());
-                locationLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-
-                // Add the details with regular font and appropriate spacing
-                Label typeLabel = new Label("Disaster Type: " + disaster.getType());
-                Label severityLabel = new Label("Severity: " + disaster.getSeverity());
-                Label statusLabel = new Label("Status: " + disaster.getStatus());
-                Label commentLabel = new Label("Comments: " + disaster.getComment());
-                Label reportedTimeLabel = new Label("Reported Time: " + disaster.getReportedTime());
-
-                // Add all labels to the VBox
-                reportBox.getChildren().addAll(locationLabel, typeLabel, severityLabel, statusLabel, commentLabel, reportedTimeLabel);
-
-                // Add the report box to the VBox that contains all reports
-                reportsVBox.getChildren().add(reportBox);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            showErrorAlert("Database Error", "Failed to load disaster reports from the database.");
+        // Fetch all disasters from the database using the DAO
+        List<IncidentReport> incidentReportList = incidentReportDAO.getAllIncidentReports();
+        // Loop through each disaster and display it in the UI
+        for (IncidentReport incidentReport : incidentReportList) {
+            VBox reportBox = new VBox(5);
+            reportBox.setStyle("-fx-background-color: #e0e0e0; -fx-padding: 15; -fx-background-radius: 10;");
+            
+            // Title label for report ID, bold and bigger font
+            Label locationLabel = new Label("Location: " + incidentReport.getLocation());
+            locationLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+            
+            // Add the details with regular font and appropriate spacing
+            Label typeLabel = new Label("Incident Type: " + incidentReport.getType());
+            Label evacuationsLabel = new Label("Evacuation: " + incidentReport.getEvacuations());
+            Label rescuedLabel = new Label("Rescued: " + incidentReport.getRescued());
+            Label casualtiesLabel = new Label("Casualties: " + incidentReport.getCasualties());
+            Label commentLabel = new Label("Teams Involved: " + incidentReport.getTeamsInvolved());
+            Label reportedTimeLabel = new Label("Reported Date: " + incidentReport.getReportDate());
+            
+            // Add all labels to the VBox
+            reportBox.getChildren().addAll(locationLabel, typeLabel, evacuationsLabel, rescuedLabel,casualtiesLabel ,commentLabel, reportedTimeLabel);
+            
+            // Add the report box to the VBox that contains all reports
+            reportsVBox.getChildren().add(reportBox);
         }
     }
 

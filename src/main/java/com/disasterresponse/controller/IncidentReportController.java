@@ -1,15 +1,22 @@
 package com.disasterresponse.controller;
 
 import com.disasterresponse.DatabaseConnection;
+import com.disasterresponse.model.IncidentReport;
+import com.disasterresponse.model.SessionManager;
+import dao.IncidentReportDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class IncidentReportController {
 
@@ -38,6 +45,8 @@ public class IncidentReportController {
 
     private String requestId;
 
+    private IncidentReportDAO incidentReportDAO = new IncidentReportDAO();
+
     // Method to initialize the form with data for the given request ID
     public void initializeForm(String requestId) {
         this.requestId = requestId;
@@ -50,8 +59,7 @@ public class IncidentReportController {
     private void loadRescueRequestData(String requestId) {
         String query = "SELECT * FROM rescue_requests WHERE request_id = ?";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, requestId);
             ResultSet rs = stmt.executeQuery();
@@ -71,9 +79,9 @@ public class IncidentReportController {
     protected void handleSubmitReportAction() {
         String location = locationField.getText();
         String type = typeField.getText();
-        String evacuations = evacuationsField.getText();
-        String rescued = rescuedField.getText();
-        String casualties = casualtiesField.getText();
+        String evacuationsString = evacuationsField.getText();
+        String rescuedString = rescuedField.getText();
+        String casualtiesString = casualtiesField.getText();
         String propertyDamage = propertyDamageField.getText();
         String infrastructureImpact = infrastructureImpactField.getText();
         String reliefActions = reliefActionsField.getText();
@@ -81,36 +89,47 @@ public class IncidentReportController {
         String witnessStatement = witnessStatementField.getText();
         String reportDate = reportDateField.getText();
 
-        saveIncidentReport(requestId, location, type, evacuations, rescued, casualties, propertyDamage, infrastructureImpact, reliefActions, teamsInvolved, witnessStatement, reportDate);
+        String userIdString = SessionManager.getInstance().getUserId();
+
+        int userId = Integer.parseInt(userIdString);
+        int requestId = Integer.parseInt(this.requestId);
+        int evacuations = Integer.parseInt(evacuationsString);
+        int rescued = Integer.parseInt(rescuedString);
+        int casualties = Integer.parseInt(casualtiesString);
+
+        IncidentReport report = new IncidentReport(requestId, userId, location, type,
+                evacuations,
+                rescued,
+                casualties,
+                propertyDamage,
+                infrastructureImpact,
+                reliefActions,
+                teamsInvolved,
+                witnessStatement,
+                convertReportDate(reportDate)
+        );
+        incidentReportDAO.saveIncidentReport(report);
 
         Stage stage = (Stage) reportDateField.getScene().getWindow();
         stage.close();
     }
+    
+    private Date convertReportDate(String reportDateString) {
 
-    private void saveIncidentReport(String requestId, String location, String type, String evacuations, String rescued, String casualties, String propertyDamage, String infrastructureImpact, String reliefActions, String teamsInvolved, String witnessStatement, String reportDate) {
-        String query = "INSERT INTO incident_reports (request_id, location, type, evacuations, rescued, casualties, property_damage, infrastructure_impact, relief_actions, teams_involved, witness_statement, report_date) " +
-                       "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setString(1, requestId);
-            stmt.setString(2, location);
-            stmt.setString(3, type);
-            stmt.setString(4, evacuations);
-            stmt.setString(5, rescued);
-            stmt.setString(6, casualties);
-            stmt.setString(7, propertyDamage);
-            stmt.setString(8, infrastructureImpact);
-            stmt.setString(9, reliefActions);
-            stmt.setString(10, teamsInvolved);
-            stmt.setString(11, witnessStatement);
-            stmt.setString(12, reportDate);
-
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+        Date sqlDate = null;
+        try {
+            // Define the date format
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            // Parse the string to LocalDate
+            LocalDate localDate = LocalDate.parse(reportDateString, formatter);
+            // Convert LocalDate to java.sql.Date
+            sqlDate = Date.valueOf(localDate);
+            
+            // Now you can use sqlDate in your SQL queries
+            return sqlDate;
+        } catch (DateTimeParseException e) {
+            e.printStackTrace(); // Handle the exception as needed
         }
+        return sqlDate;
     }
 }
