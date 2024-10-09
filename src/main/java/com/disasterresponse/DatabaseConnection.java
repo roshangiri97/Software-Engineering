@@ -10,7 +10,7 @@ public class DatabaseConnection {
     private static final String URL = "jdbc:mysql://localhost:3306/";
     private static final String DB_NAME = "drs";
     private static final String USER = "root"; // Replace with your DB user
-    private static final String PASSWORD = "root"; // Replace with your DB password
+    private static final String PASSWORD = "pass"; // Replace with your DB password
 
     // Establish a connection to the MySQL server (without specifying the database)
     private static Connection getServerConnection() throws SQLException {

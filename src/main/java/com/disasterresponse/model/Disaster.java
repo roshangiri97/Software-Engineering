@@ -8,7 +8,7 @@ public class Disaster {
     private String status;
     private String comment;
     private String reportedTime;
-
+private String report; // Add the 'report' field
     // Constructor with ID
     public Disaster(int id, String location, String type, String severity, String status, String comment, String reportedTime) {
         this.id = id;
@@ -29,7 +29,19 @@ public class Disaster {
         this.comment = comment;
         this.reportedTime = reportedTime;
     }
+ // Constructor with ID
+    public Disaster(int id, String location, String type, String severity, 
+                   String status, String comment, String reportedTime, String report) { 
+        // ... (other initializations)
+        this.report = report; 
+    }
 
+    // Constructor without ID
+    public Disaster(String location, String type, String severity, 
+                   String status, String comment, String reportedTime, String report) { 
+        // ... (other initializations)
+        this.report = report; 
+    }
     // Getters and Setters
     public int getId() {
         return id;
@@ -65,5 +77,12 @@ public class Disaster {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+      public String getReport() { // Add the getter method
+        return report;
+    }
+
+    public void setReport(String report) { // Add the setter (if needed)
+        this.report = report;
     }
 }

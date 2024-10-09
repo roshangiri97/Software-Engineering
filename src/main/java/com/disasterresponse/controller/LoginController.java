@@ -29,20 +29,31 @@ public class LoginController {
     private String fullName;
     private String userId;
 
-    @FXML
+  @FXML
     protected void handleLoginAction() {
         String username = usernameField.getText().trim();
         String password = passwordField.getText().trim();
 
+        if (username.isEmpty() || password.isEmpty()) {
+            errorMessageLabel.setText("Please enter both username and password.");
+            errorMessageLabel.setVisible(true);
+            return;
+        }
+
         if (authenticate(username, password)) {
-            // Store user session details
             SessionManager.getInstance().setLoggedInUser(userId, username, userAccessLevel, fullName);
             loadHomepageView();
         } else {
-            errorMessageLabel.setText("Invalid username or password!");
+            // Check if username exists
+            if (!isUserExists(username)) {
+                errorMessageLabel.setText("Invalid username.");
+            } else {
+                errorMessageLabel.setText("Invalid password.");
+            }
             errorMessageLabel.setVisible(true);
         }
     }
+
 
     private boolean authenticate(String username, String password) {
         String query = "SELECT * FROM users WHERE username = ? AND password = ?";
@@ -59,13 +70,31 @@ public class LoginController {
                 userAccessLevel = rs.getString("AccessLevel");
                 fullName = rs.getString("FullName");
                 return true;
-            }
+            } 
 
         } catch (SQLException e) {
             e.printStackTrace();
+            // Handle database errors 
         }
 
         return false;
+    }
+     // Helper function to check if username exists
+    private boolean isUserExists(String username) {
+        String query = "SELECT 1 FROM users WHERE username = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            return rs.next(); // Username exists if a row is returned
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle database errors
+        }
+        return false; 
     }
 
     private void loadHomepageView() {

@@ -18,6 +18,7 @@ import com.disasterresponse.model.Disaster;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.List;
+import java.util.Optional;
 
 public class HomepageController {
 
@@ -177,8 +178,20 @@ public class HomepageController {
 
     @FXML
     protected void handleLogoutAction() {
-        SessionManager.getInstance().clearSession();
-        loadView("/com/disasterresponse/view/LoginView.fxml");
+        // Create a confirmation dialog
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Logout Confirmation");
+        alert.setHeaderText("Confirm Logout");
+        alert.setContentText("Are you sure you want to logout?");
+
+        // Show the dialog and get the user's response
+        Optional<ButtonType> result = alert.showAndWait();
+
+        // If the user clicks "OK", then logout
+        if (result.isPresent() && result.get() == ButtonType.OK){
+            SessionManager.getInstance().clearSession();
+            loadView("/com/disasterresponse/view/LoginView.fxml");
+        }
     }
 
     // Utility method to load a new view (FXML)
