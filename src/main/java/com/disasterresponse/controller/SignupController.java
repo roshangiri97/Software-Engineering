@@ -11,6 +11,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -58,12 +61,14 @@ public class SignupController {
             return;
         }
 
-        saveUser(fullName, address, phone, username, email, password, selectedRole);
+        saveUser (fullName, address, phone, username, email, password, selectedRole);
     }
 
-    private void saveUser(String fullName, String address, String phone, String username, String email, String password, String accessLevel) {
+    private void saveUser (String fullName, String address, String phone, String username, String email, String password, String accessLevel) {
         String query = "INSERT INTO users (FullName, Address, PhoneNumber, Username, Email, Password, AccessLevel) " +
                        "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        String hashedPassword = hash256(password);
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -73,7 +78,7 @@ public class SignupController {
             stmt.setString(3, phone);
             stmt.setString(4, username);
             stmt.setString(5, email);
-            stmt.setString(6, password);
+            stmt.setString(6, hashedPassword);
             stmt.setString(7, accessLevel);
 
             stmt.executeUpdate();
@@ -82,6 +87,30 @@ public class SignupController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private String hash256(String input) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = md.digest(input.getBytes(StandardCharsets.UTF_8));
+            return bytesToHex(hashBytes);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            // Handle algorithm not found error
+        }
+        return null;
+    }
+
+    private String bytesToHex(byte[] bytes) {
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : bytes) {
+            String hex = Integer.toHexString(0xff & b);
+            if (hex.length() == 1) {
+                hexString.append('0');
+            }
+            hexString.append(hex);
+        }
+        return hexString.toString();
     }
 
     private void loadLoginView() {
