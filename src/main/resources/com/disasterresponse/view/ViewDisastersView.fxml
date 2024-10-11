@@ -6,20 +6,19 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.disasterresponse.controller.ViewDisastersController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="546.0" prefWidth="545.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.disasterresponse.controller.ViewDisastersController">
 
     <!-- Top Section with Back Button -->
     <top>
-        <VBox spacing="10" style="-fx-padding: 10;" BorderPane.alignment="CENTER_LEFT">
+        <VBox alignment="TOP_CENTER" spacing="10" style="-fx-padding: 10;" BorderPane.alignment="CENTER_LEFT">
             <Button alignment="TOP_LEFT" onAction="#handleBackToHomeAction" text="Back" />
         </VBox>
     </top>
 
     <!-- Center Section for Disaster List with ScrollPane -->
     <center>
-        <ScrollPane fitToWidth="true" prefHeight="700" style="-fx-padding: 20;">
-            <!-- Set preferred height to limit the viewable area -->
-            <VBox fx:id="disastersVBox" alignment="CENTER" spacing="10" style="-fx-background-color: #d1d1d1;" />
+        <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="700" style="-fx-padding: 20;">
+            <VBox fx:id="disastersVBox" alignment="CENTER" spacing="15" style="-fx-background-color: #d1d1d1; -fx-padding: 20;" />
         </ScrollPane>
     </center>
 

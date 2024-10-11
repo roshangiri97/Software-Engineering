@@ -12,7 +12,7 @@ import java.sql.Date;
  */
 public class IncidentReport {
     private int requestId; // Corresponds to request_id
-    private int userId; // Corresponds to userId
+
     private String location; // Corresponds to location
     private String type; // Corresponds to type
     private int evacuations; // Corresponds to evacuations
@@ -26,11 +26,11 @@ public class IncidentReport {
     private Date reportDate; // Corresponds to report_date
 
     // Constructor
-    public IncidentReport(int requestId, int userId, String location, String type, int evacuations, int rescued,
+    public IncidentReport(int requestId,  String location, String type, int evacuations, int rescued,
                           int casualties, String propertyDamage, String infrastructureImpact, String reliefActions,
                           String teamsInvolved, String witnessStatement, Date reportDate) {
         this.requestId = requestId;
-        this.userId = userId;
+       
         this.location = location;
         this.type = type;
         this.evacuations = evacuations;
@@ -53,13 +53,7 @@ public class IncidentReport {
         this.requestId = requestId;
     }
 
-    public int getUserId() {
-        return userId;
-    }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
 
     public String getLocation() {
         return location;
@@ -154,7 +148,7 @@ public class IncidentReport {
     public String toString() {
         return "IncidentReport{" +
                 "requestId=" + requestId +
-                ", userId=" + userId +
+             
                 ", location='" + location + '\'' +
                 ", type='" + type + '\'' +
                 ", evacuations=" + evacuations +

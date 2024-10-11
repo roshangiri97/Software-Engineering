@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="TOP_LEFT" prefHeight="512.0" prefWidth="954.0" spacing="10" style="-fx-padding: 20;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.disasterresponse.controller.ManageDisasterController">
+<VBox alignment="TOP_LEFT" prefHeight="522.0" prefWidth="699.0" spacing="10" style="-fx-padding: 20;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.disasterresponse.controller.ManageDisasterController">
 
     <!-- Back Button -->
     <Button fx:id="backButton" onAction="#handleBackAction" text="Back" />

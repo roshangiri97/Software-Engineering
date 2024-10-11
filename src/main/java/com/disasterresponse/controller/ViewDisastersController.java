@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -14,6 +13,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.scene.control.Alert.AlertType;
 
 import java.io.IOException;
 import java.net.URL;
@@ -40,19 +40,20 @@ public class ViewDisastersController implements Initializable {
             List<Disaster> disasterList = disasterDAO.getAllDisasters();
 
             for (Disaster disaster : disasterList) {
-                VBox disasterBox = new VBox(5); // Spacing between elements
+                // Each disaster will be displayed in its own VBox with padding and border styling
+                VBox disasterBox = new VBox(10); // Add spacing between elements
 
                 // Create labels for each field
-                Label locationLabel = new Label(disaster.getLocation());
+                Label locationLabel = new Label("Location: " + disaster.getLocation());
                 locationLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
 
                 Label typeLabel = new Label("Disaster Type: " + disaster.getType());
                 typeLabel.setFont(Font.font("Arial", FontWeight.BOLD, FontPosture.ITALIC, 12));
 
                 Label timeLabel = new Label("Disaster Reported: " + disaster.getReportedTime());
-                timeLabel.setFont(Font.font("Arial", FontWeight.BOLD, 12));
+                timeLabel.setFont(Font.font("Arial", 12));
 
-                Label severityLabel = new Label(disaster.getSeverity());
+                Label severityLabel = new Label("Severity: " + disaster.getSeverity());
                 severityLabel.setFont(Font.font("Arial", 12));
                 severityLabel.setStyle("-fx-background-radius: 5; -fx-padding: 2;");
                 setSeverityBackgroundColor(severityLabel, disaster.getSeverity());
@@ -67,19 +68,24 @@ public class ViewDisastersController implements Initializable {
 
                 // Add labels to the VBox for the individual disaster
                 disasterBox.getChildren().addAll(locationLabel, typeLabel, timeLabel, severityLabel, statusLabel, commentsLabel);
-                disasterBox.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10; -fx-background-radius: 5;");
+                disasterBox.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10; -fx-background-radius: 5; -fx-border-color: #ccc; -fx-border-width: 1px;");
 
                 // Add each disasterBox to the disastersVBox
                 disastersVBox.getChildren().add(disasterBox);
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Database Error");
-            alert.setHeaderText("Error Loading Disaster Reports");
-            alert.setContentText("An error occurred while fetching disaster reports from the database.");
-            alert.showAndWait();
+            showErrorAlert("Error Loading Disaster Reports", "An error occurred while fetching disaster reports from the database.");
         }
+    }
+
+    // Show an error alert
+    private void showErrorAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
     // Back to Home button handler
@@ -142,23 +148,4 @@ public class ViewDisastersController implements Initializable {
                 break;
         }
     }
-
-//    @FXML
-//    protected void handleBackToHomeAction() {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/disasterresponse/view/HomepageView.fxml"));
-//            Parent root = loader.load();
-//
-//            // Re-initialize the homepage if returning
-//            HomepageController controller = loader.getController();
-//            controller.initializePage();
-//
-//            Stage stage = (Stage) disastersVBox.getScene().getWindow();
-//            Scene scene = new Scene(root);
-//            stage.setScene(scene);
-//            stage.show();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 }

@@ -93,4 +93,20 @@ public class DatabaseConnection {
             e.printStackTrace();
         }
     }
+public static void resetConnection() {
+    try {
+        // Close any existing connections
+        // (Note: This is not actually necessary, as DriverManager.getConnection() will automatically close any existing connections)
+
+        // Re-establish the connection
+        Connection connection = getServerConnection();
+        createDatabaseIfNotExists();
+        connection = DriverManager.getConnection(URL + DB_NAME, USER, PASSWORD);
+
+        System.out.println("Database connection reset successfully.");
+    } catch (SQLException e) {
+        System.out.println("Error resetting database connection: " + e.getMessage());
+        e.printStackTrace();
+    }
+}
 }

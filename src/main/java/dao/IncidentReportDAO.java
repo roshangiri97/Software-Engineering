@@ -21,15 +21,15 @@ import java.util.List;
 public class IncidentReportDAO {
 
     public void saveIncidentReport(IncidentReport report) {
-        String query = "INSERT INTO incident_reports (request_id, userId, location, type, evacuations, rescued, casualties, property_damage, infrastructure_impact, relief_actions, teams_involved, witness_statement, report_date) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO incident_reports (request_id, location, type, evacuations, rescued, casualties, property_damage, infrastructure_impact, relief_actions, teams_involved, witness_statement, report_date) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
 
             // Set the parameters using the IncidentReport model
             // Set the parameters using the IncidentReport model
             stmt.setInt(1, report.getRequestId());
-            stmt.setInt(2, report.getUserId());
+         
             stmt.setString(3, report.getLocation());
             stmt.setString(4, report.getType());
             stmt.setInt(5, report.getEvacuations());
@@ -61,7 +61,7 @@ public class IncidentReportDAO {
 
             while (rs.next()) {
                 int request_id = rs.getInt("request_id");
-                int userId = rs.getInt("userId");
+              
                 String location = rs.getString("location");
                 String type = rs.getString("type");
                 int evacuations = rs.getInt("evacuations");
@@ -75,7 +75,7 @@ public class IncidentReportDAO {
                 Date reportDate = rs.getDate("report_date");
 
                 // Create an IncidentReport object and add it to the list
-                IncidentReport report = new IncidentReport(request_id, userId, location, type, evacuations, rescued,
+                IncidentReport report = new IncidentReport(request_id, location, type, evacuations, rescued,
                         casualties, propertyDamage, infrastructureImpact, reliefActions, teamsInvolved,
                         witnessStatement, reportDate);
                 incidentReports.add(report);

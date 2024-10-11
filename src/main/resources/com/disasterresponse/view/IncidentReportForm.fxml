@@ -4,62 +4,81 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" spacing="15" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.disasterresponse.controller.IncidentReportController" style="-fx-padding: 40; -fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;">
+<VBox alignment="CENTER" prefHeight="709.0" prefWidth="565.0" spacing="15" style="-fx-padding: 40; -fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #ddd; -fx-border-radius: 10;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/22" fx:controller="com.disasterresponse.controller.IncidentReportController">
     
     <!-- Title -->
-    <Label text="Submit Incident Report" style="-fx-font-size: 22px; -fx-font-weight: bold;" />
+    <Label style="-fx-font-size: 22px; -fx-font-weight: bold;" text="Submit Incident Report" />
     
-    <GridPane alignment="CENTER" hgap="10" vgap="15" style="-fx-background-color: #f5f5f5; -fx-background-radius: 10; -fx-padding: 20;">
+    <GridPane alignment="CENTER" hgap="10" style="-fx-background-color: #f5f5f5; -fx-background-radius: 10; -fx-padding: 20;" vgap="15">
         
         <!-- Location -->
-        <Label text="Location:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-size: 14px;"/>
-        <TextField fx:id="locationField" editable="false" GridPane.rowIndex="0" GridPane.columnIndex="1" style="-fx-background-radius: 10px; -fx-pref-width: 300px;"/>
+        <Label style="-fx-font-size: 14px;" text="Location:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <TextField fx:id="locationField" editable="false" style="-fx-background-radius: 10px; -fx-pref-width: 300px;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
         <!-- Type -->
-        <Label text="Type:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-size: 14px;"/>
-        <TextField fx:id="typeField" editable="false" GridPane.rowIndex="1" GridPane.columnIndex="1" style="-fx-background-radius: 10px; -fx-pref-width: 300px;"/>
+        <Label style="-fx-font-size: 14px;" text="Type:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <TextField fx:id="typeField" editable="false" style="-fx-background-radius: 10px; -fx-pref-width: 300px;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
         <!-- Evacuations -->
-        <Label text="Evacuations:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-size: 14px;"/>
-        <TextField fx:id="evacuationsField" GridPane.rowIndex="2" GridPane.columnIndex="1" style="-fx-background-radius: 10px; -fx-pref-width: 300px;"/>
+        <Label style="-fx-font-size: 14px;" text="Evacuations:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <TextField fx:id="evacuationsField" style="-fx-background-radius: 10px; -fx-pref-width: 300px;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
         <!-- Rescued -->
-        <Label text="Rescued:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-size: 14px;"/>
-        <TextField fx:id="rescuedField" GridPane.rowIndex="3" GridPane.columnIndex="1" style="-fx-background-radius: 10px; -fx-pref-width: 300px;"/>
+        <Label style="-fx-font-size: 14px;" text="Rescued:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <TextField fx:id="rescuedField" style="-fx-background-radius: 10px; -fx-pref-width: 300px;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
         <!-- Casualties -->
-        <Label text="Casualties:" GridPane.rowIndex="4" GridPane.columnIndex="0" style="-fx-font-size: 14px;"/>
-        <TextField fx:id="casualtiesField" GridPane.rowIndex="4" GridPane.columnIndex="1" style="-fx-background-radius: 10px; -fx-pref-width: 300px;"/>
+        <Label style="-fx-font-size: 14px;" text="Casualties:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+        <TextField fx:id="casualtiesField" style="-fx-background-radius: 10px; -fx-pref-width: 300px;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
         <!-- Property Damage -->
-        <Label text="Property Damage:" GridPane.rowIndex="5" GridPane.columnIndex="0" style="-fx-font-size: 14px;"/>
-        <TextField fx:id="propertyDamageField" GridPane.rowIndex="5" GridPane.columnIndex="1" style="-fx-background-radius: 10px; -fx-pref-width: 300px;"/>
+        <Label style="-fx-font-size: 14px;" text="Property Damage:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+        <TextField fx:id="propertyDamageField" style="-fx-background-radius: 10px; -fx-pref-width: 300px;" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
         <!-- Infrastructure Impact -->
-        <Label text="Infrastructure Impact:" GridPane.rowIndex="6" GridPane.columnIndex="0" style="-fx-font-size: 14px;"/>
-        <TextField fx:id="infrastructureImpactField" GridPane.rowIndex="6" GridPane.columnIndex="1" style="-fx-background-radius: 10px; -fx-pref-width: 300px;"/>
+        <Label style="-fx-font-size: 14px;" text="Infrastructure Impact:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+        <TextField fx:id="infrastructureImpactField" style="-fx-background-radius: 10px; -fx-pref-width: 300px;" GridPane.columnIndex="1" GridPane.rowIndex="6" />
 
         <!-- Relief Actions -->
-        <Label text="Relief Actions:" GridPane.rowIndex="7" GridPane.columnIndex="0" style="-fx-font-size: 14px;"/>
-        <TextField fx:id="reliefActionsField" GridPane.rowIndex="7" GridPane.columnIndex="1" style="-fx-background-radius: 10px; -fx-pref-width: 300px;"/>
+        <Label style="-fx-font-size: 14px;" text="Relief Actions:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+        <TextField fx:id="reliefActionsField" style="-fx-background-radius: 10px; -fx-pref-width: 300px;" GridPane.columnIndex="1" GridPane.rowIndex="7" />
 
         <!-- Teams Involved -->
-        <Label text="Teams Involved:" GridPane.rowIndex="8" GridPane.columnIndex="0" style="-fx-font-size: 14px;"/>
-        <TextField fx:id="teamsInvolvedField" editable="false" GridPane.rowIndex="8" GridPane.columnIndex="1" style="-fx-background-radius: 10px; -fx-pref-width: 300px;"/>
+        <Label style="-fx-font-size: 14px;" text="Teams Involved:" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+        <TextField fx:id="teamsInvolvedField" editable="false" style="-fx-background-radius: 10px; -fx-pref-width: 300px;" GridPane.columnIndex="1" GridPane.rowIndex="8" />
 
         <!-- Witness Statement -->
-        <Label text="Witness Statement:" GridPane.rowIndex="9" GridPane.columnIndex="0" style="-fx-font-size: 14px;"/>
-        <TextArea fx:id="witnessStatementField" GridPane.rowIndex="9" GridPane.columnIndex="1" style="-fx-background-radius: 10px; -fx-pref-width: 300px; -fx-pref-height: 80px;"/>
+        <Label style="-fx-font-size: 14px;" text="Witness Statement:" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+        <TextArea fx:id="witnessStatementField" style="-fx-background-radius: 10px; -fx-pref-width: 300px; -fx-pref-height: 80px;" GridPane.columnIndex="1" GridPane.rowIndex="9" />
 
         <!-- Report Date -->
-        <Label text="Report Date:" GridPane.rowIndex="10" GridPane.columnIndex="0" style="-fx-font-size: 14px;"/>
-        <TextField fx:id="reportDateField" editable="false" GridPane.rowIndex="10" GridPane.columnIndex="1" style="-fx-background-radius: 10px; -fx-pref-width: 300px;"/>
+        <Label style="-fx-font-size: 14px;" text="Report Date:" GridPane.columnIndex="0" GridPane.rowIndex="10" />
+        <TextField fx:id="reportDateField" editable="false" style="-fx-background-radius: 10px; -fx-pref-width: 300px;" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+      <columnConstraints>
+         <ColumnConstraints />
+         <ColumnConstraints />
+      </columnConstraints>
+      <rowConstraints>
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+      </rowConstraints>
 
     </GridPane>
 
     <!-- Submit Button -->
-    <Button text="Submit Report" onAction="#handleSubmitReportAction" style="-fx-background-color: #000000; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10px;"/>
+    <Button onAction="#handleSubmitReportAction" style="-fx-background-color: #000000; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10px;" text="Submit Report" />
 </VBox>

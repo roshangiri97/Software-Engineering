@@ -97,7 +97,7 @@ public class IncidentReportController {
         int rescued = Integer.parseInt(rescuedString);
         int casualties = Integer.parseInt(casualtiesString);
 
-        IncidentReport report = new IncidentReport(requestId, userId, location, type,
+        IncidentReport report = new IncidentReport(requestId, location, type,
                 evacuations,
                 rescued,
                 casualties,

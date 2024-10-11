@@ -57,4 +57,6 @@ public class SessionManager {
     public boolean isLoggedIn() {
         return userId != null;
     }
+    
+ 
 }
