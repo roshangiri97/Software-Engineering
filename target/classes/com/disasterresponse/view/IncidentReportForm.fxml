@@ -59,6 +59,9 @@
         <!-- Report Date -->
         <Label style="-fx-font-size: 14px;" text="Report Date:" GridPane.columnIndex="0" GridPane.rowIndex="10" />
         <TextField fx:id="reportDateField" editable="false" style="-fx-background-radius: 10px; -fx-pref-width: 300px;" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+        
+        <Label fx:id="errorMessageLabel" text="" visible="false" />
+
       <columnConstraints>
          <ColumnConstraints />
          <ColumnConstraints />

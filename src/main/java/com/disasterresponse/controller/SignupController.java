@@ -21,24 +21,24 @@ import java.sql.SQLException;
 
 public class SignupController {
 
+   @FXML
+     TextField fullNameField;
     @FXML
-    private TextField fullNameField;
+     TextField addressField;
     @FXML
-    private TextField addressField;
+     TextField phoneField;
     @FXML
-    private TextField phoneField;
+     TextField usernameField;
     @FXML
-    private TextField usernameField;
+     TextField emailField;
     @FXML
-    private TextField emailField;
+     PasswordField passwordField;
     @FXML
-    private PasswordField passwordField;
+     PasswordField confirmPasswordField;
     @FXML
-    private PasswordField confirmPasswordField;
+     ComboBox<String> roleComboBox;
     @FXML
-    private ComboBox<String> roleComboBox;
-    @FXML
-    private Label errorMessageLabel;
+     Label errorMessageLabel;
 
     @FXML
     public void initialize() {
@@ -46,7 +46,7 @@ public class SignupController {
     }
 
     @FXML
-    protected void handleSignupAction() {
+    public void handleSignupAction() {
         String fullName = fullNameField.getText();
         String address = addressField.getText();
         String phone = phoneField.getText();
@@ -65,7 +65,7 @@ public class SignupController {
         saveUser (fullName, address, phone, username, email, password, selectedRole);
     }
 
-    private void saveUser (String fullName, String address, String phone, String username, String email, String password, String accessLevel) {
+    public void saveUser (String fullName, String address, String phone, String username, String email, String password, String accessLevel) {
         String query = "INSERT INTO users (FullName, Address, PhoneNumber, Username, Email, Password, AccessLevel) " +
                        "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
@@ -90,7 +90,7 @@ public class SignupController {
         }
     }
 
-    private String hash256(String input) {
+    public String hash256(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] hashBytes = md.digest(input.getBytes(StandardCharsets.UTF_8));
@@ -102,7 +102,7 @@ public class SignupController {
         return null;
     }
 
-    private String bytesToHex(byte[] bytes) {
+    public String bytesToHex(byte[] bytes) {
         StringBuilder hexString = new StringBuilder();
         for (byte b : bytes) {
             String hex = Integer.toHexString(0xff & b);
@@ -114,7 +114,7 @@ public class SignupController {
         return hexString.toString();
     }
 
-    private void loadLoginView() {
+    public void loadLoginView() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/disasterresponse/view/LoginView.fxml"));
             Parent root = loader.load();
@@ -130,7 +130,7 @@ public class SignupController {
     }
 
     @FXML
-    protected void handleBackAction() {
+    public void handleBackAction() {
         loadLoginView();
     }
 }

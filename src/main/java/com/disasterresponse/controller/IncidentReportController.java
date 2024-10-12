@@ -17,35 +17,38 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import javafx.scene.control.Label;
 
 public class IncidentReportController {
 
     @FXML
-    private TextField locationField;
+     TextField locationField;
     @FXML
-    private TextField typeField;
+     TextField typeField;
     @FXML
-    private TextField evacuationsField;
+     TextField evacuationsField;
     @FXML
-    private TextField rescuedField;
+     TextField rescuedField;
     @FXML
-    private TextField casualtiesField;
+     TextField casualtiesField;
     @FXML
-    private TextField propertyDamageField;
+     TextField propertyDamageField;
     @FXML
-    private TextField infrastructureImpactField;
+     TextField infrastructureImpactField;
     @FXML
-    private TextField reliefActionsField;
+     TextField reliefActionsField;
     @FXML
-    private TextField teamsInvolvedField;
+     TextField teamsInvolvedField;
     @FXML
-    private TextArea witnessStatementField;
+     TextArea witnessStatementField;
     @FXML
-    private TextField reportDateField;
+     TextField reportDateField;
 
-    private String requestId;
-
-    private IncidentReportDAO incidentReportDAO = new IncidentReportDAO();
+     String requestId;
+ @FXML
+    public Label errorMessageLabel; // Add this line
+ 
+    public IncidentReportDAO incidentReportDAO = new IncidentReportDAO();
 
     // Method to initialize the form with data for the given request ID
     public void initializeForm(String requestId) {
@@ -56,7 +59,7 @@ public class IncidentReportController {
         reportDateField.setText(java.time.LocalDate.now().toString());
     }
 
-    private void loadRescueRequestData(String requestId) {
+    public void loadRescueRequestData(String requestId) {
         String query = "SELECT * FROM rescue_requests WHERE request_id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -76,7 +79,7 @@ public class IncidentReportController {
     }
 
     @FXML
-    protected void handleSubmitReportAction() {
+    public void handleSubmitReportAction() {
         String location = locationField.getText();
         String type = typeField.getText();
         String evacuationsString = evacuationsField.getText();
@@ -114,7 +117,7 @@ public class IncidentReportController {
         stage.close();
     }
     
-    private Date convertReportDate(String reportDateString) {
+    public Date convertReportDate(String reportDateString) {
 
         Date sqlDate = null;
         try {

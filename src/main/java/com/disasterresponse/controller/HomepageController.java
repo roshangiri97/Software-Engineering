@@ -1,8 +1,6 @@
 package com.disasterresponse.controller;
 
-
 import com.disasterresponse.DatabaseConnection;
-
 import com.disasterresponse.model.SessionManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,8 +13,6 @@ import javafx.stage.Stage;
 import dao.DisasterDAO;
 import com.disasterresponse.model.Disaster;
 
-import java.io.IOException;
-import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,9 +27,11 @@ public class HomepageController {
     @FXML
     private Button viewDisastersButton; // Button to view disasters
     @FXML
-    private Label welcomeLabel;
+    public Button logoutButton; // Declare the logout button
     @FXML
-    private VBox recentAlertsVBox; // VBox to display recent alerts
+     Label welcomeLabel;
+    @FXML
+    public VBox recentAlertsVBox; // VBox to display recent alerts
     @FXML
     private Button rescueRequestsButton; // Button for Rescue Requests
 
@@ -195,7 +193,7 @@ public class HomepageController {
     }
 
     // Utility method to load a new view (FXML)
-    private void loadView(String viewPath) {
+    public void loadView(String viewPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(viewPath));
             Parent root = loader.load();
@@ -208,4 +206,7 @@ public class HomepageController {
             System.err.println("Error loading view: " + viewPath + ", Error: " + e.getMessage());
         }
     }
+    public String getWelcomeLabelText() {
+    return welcomeLabel.getText();
+}
 }

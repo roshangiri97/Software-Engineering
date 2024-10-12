@@ -31,6 +31,15 @@ public class LoginController {
     private String userAccessLevel;
     private String fullName;
     private String userId;
+    
+   // Simulated valid credentials for this example
+    private static final String VALID_USERNAME = "admin";
+    private static final String VALID_PASSWORD = "admin123";
+
+    // Method to validate the login
+    public boolean isValidLogin(String username, String password) {
+        return VALID_USERNAME.equals(username) && VALID_PASSWORD.equals(password);
+    }
 
   @FXML
     protected void handleLoginAction() {
@@ -173,6 +182,17 @@ private String bytesToHex(byte[] bytes) {
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    
+    // Method to check if login is successful
+    public boolean isLoginSuccessful() {
+        // Add your login logic here
+        // For testing, this is just an example:
+        if ("validUser".equals(usernameField.getText()) && "password123".equals(passwordField.getText())) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

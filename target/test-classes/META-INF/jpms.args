@@ -1,0 +1,4 @@
+--patch-module
+com.disasterresponse=_
+--add-reads
+com.disasterresponse=ALL-UNNAMED
