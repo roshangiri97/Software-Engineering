@@ -1,6 +1,0 @@
-com\disasterresponse\model\DisasterTest.class
-com\disasterresponse\model\UserTest.class
-com\disasterresponse\controller\DatabaseConnectionTest.class
-com\disasterresponse\controller\SignupControllerTest.class
-com\disasterresponse\model\RescueRequestTest.class
-com\disasterresponse\controller\LoginControllerTest.class

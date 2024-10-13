@@ -26,20 +26,20 @@ import javafx.scene.control.Alert.AlertType;
 public class ReportDisasterViewController {
 
     @FXML
-    private ComboBox<String> disasterTypeComboBox;
+    public ComboBox<String> disasterTypeComboBox;
 
     @FXML
-    private TextField locationField;
+    public TextField locationField;
 
     @FXML
-    private ComboBox<String> severityComboBox;
+    public ComboBox<String> severityComboBox;
 
     @FXML
-    private TextArea commentsArea;
+    public TextArea commentsArea;
 
-    private DisasterDAO disasterDAO = new DisasterDAO(); // DAO to handle database operations
+    public DisasterDAO disasterDAO = new DisasterDAO(); // DAO to handle database operations
     @FXML
-    private Label successLabel;
+    public Label successLabel;
 
     @FXML
     public void initialize() {
@@ -53,7 +53,7 @@ public class ReportDisasterViewController {
     }
 
     @FXML
-    protected void handleSubmitAction() {
+    public void handleSubmitAction() {
         String disasterType = disasterTypeComboBox.getValue();
         String location = locationField.getText().trim();
         String severity = severityComboBox.getValue();
@@ -68,7 +68,7 @@ public class ReportDisasterViewController {
         }
     }
 
-    private void saveDisasterReport(String disasterType, String location, String severity, String comments) {
+    public void saveDisasterReport(String disasterType, String location, String severity, String comments) {
         // Get the currently logged-in user's ID from SessionManager
         String userId = SessionManager.getInstance().getUserId(); // Optional
 
@@ -104,7 +104,7 @@ public class ReportDisasterViewController {
         }
     }
 
-    private void clearFields() {
+    void clearFields() {
         // Reset input fields after successful submission
         disasterTypeComboBox.setValue("Hurricane");
         locationField.clear();

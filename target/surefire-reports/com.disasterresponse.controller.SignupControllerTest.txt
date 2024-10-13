@@ -1,8 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.disasterresponse.controller.SignupControllerTest
--------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 22.027 s <<< FAILURE! - in com.disasterresponse.controller.SignupControllerTest
-testInvalidSignup{FxRobot}  Time elapsed: 11.412 s  <<< ERROR!
-org.testfx.api.FxRobotException: the query "Public" returned no nodes.
-	at com.disasterresponse/com.disasterresponse.controller.SignupControllerTest.testInvalidSignup(SignupControllerTest.java:77)
-

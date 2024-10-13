@@ -131,7 +131,7 @@ public class IncidentReportController {
             // Now you can use sqlDate in your SQL queries
             return sqlDate;
         } catch (DateTimeParseException e) {
-            e.printStackTrace(); // Handle the exception as needed
+           // e.printStackTrace(); // Handle the exception as needed
         }
         return sqlDate;
     }

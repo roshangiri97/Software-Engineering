@@ -11,7 +11,7 @@
     <!-- Top Section with Back Button -->
     <top>
         <VBox alignment="TOP_CENTER" spacing="10" style="-fx-padding: 10;" BorderPane.alignment="CENTER_LEFT">
-            <Button alignment="TOP_LEFT" onAction="#handleBackToHomeAction" text="Back" />
+            <Button fx:id="backToHomeButton" alignment="TOP_LEFT" onAction="#handleBackToHomeAction" text="Back" />
         </VBox>
     </top>
 

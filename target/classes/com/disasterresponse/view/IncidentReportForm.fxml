@@ -83,5 +83,5 @@
     </GridPane>
 
     <!-- Submit Button -->
-    <Button onAction="#handleSubmitReportAction" style="-fx-background-color: #000000; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10px;" text="Submit Report" />
+    <Button  fx:id="submitReportButton" onAction="#handleSubmitReportAction" style="-fx-background-color: #000000; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 10px;" text="Submit Report" />
 </VBox>

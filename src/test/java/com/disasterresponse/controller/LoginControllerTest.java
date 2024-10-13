@@ -42,4 +42,5 @@ public class LoginControllerTest  {
         boolean result = loginController.isValidLogin("testuser", "wrongpassword");
         assertFalse(result, "Login should fail with invalid credentials.");
     }
+    
 }

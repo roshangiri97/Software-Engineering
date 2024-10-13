@@ -25,9 +25,9 @@ import javafx.fxml.Initializable;
 public class ViewDisastersController implements Initializable {
 
     @FXML
-    private VBox disastersVBox; // VBox to dynamically add disaster reports
+    public VBox disastersVBox; // VBox to dynamically add disaster reports
 
-    private DisasterDAO disasterDAO = new DisasterDAO();
+    public DisasterDAO disasterDAO = new DisasterDAO();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -35,7 +35,9 @@ public class ViewDisastersController implements Initializable {
     }
 
     // Method to load disaster reports from the database
-    private void loadDisasterReports() {
+    public void loadDisasterReports() {
+           // Clear existing children
+    disastersVBox.getChildren().clear();
         try {
             List<Disaster> disasterList = disasterDAO.getAllDisasters();
 
@@ -80,7 +82,7 @@ public class ViewDisastersController implements Initializable {
     }
 
     // Show an error alert
-    private void showErrorAlert(String title, String content) {
+    public void showErrorAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);
@@ -90,7 +92,7 @@ public class ViewDisastersController implements Initializable {
 
     // Back to Home button handler
     @FXML
-    private void handleBackToHomeAction() {
+    public void handleBackToHomeAction() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/disasterresponse/view/HomepageView.fxml"));
             Parent root = loader.load();
@@ -108,7 +110,7 @@ public class ViewDisastersController implements Initializable {
     }
 
     // Method to set the background color based on severity
-    private void setSeverityBackgroundColor(Label label, String severity) {
+    public void setSeverityBackgroundColor(Label label, String severity) {
         switch (severity.toLowerCase()) {
             case "critical":
                 label.setStyle(label.getStyle() + "-fx-background-color: red; -fx-text-fill: white;");
@@ -129,7 +131,7 @@ public class ViewDisastersController implements Initializable {
     }
 
     // Method to set the background color based on the status
-    private void setStatusBackgroundColor(Label label, String status) {
+    public void setStatusBackgroundColor(Label label, String status) {
         switch (status.toLowerCase()) {
             case "active":
                 label.setStyle(label.getStyle() + "-fx-background-color: green; -fx-text-fill: white;");

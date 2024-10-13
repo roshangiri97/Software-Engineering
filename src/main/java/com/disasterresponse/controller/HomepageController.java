@@ -19,24 +19,24 @@ import java.util.Optional;
 public class HomepageController {
 
     @FXML
-    private Button manageUsersButton;
+     Button manageUsersButton;
     @FXML
-    private Button generateReportsButton;
+     Button generateReportsButton;
     @FXML
-    private Button assistanceButton;
+     Button assistanceButton;
     @FXML
-    private Button viewDisastersButton; // Button to view disasters
+     Button viewDisastersButton; // Button to view disasters
     @FXML
-    public Button logoutButton; // Declare the logout button
+     Button logoutButton; // Declare the logout button
     @FXML
      Label welcomeLabel;
     @FXML
     public VBox recentAlertsVBox; // VBox to display recent alerts
     @FXML
-    private Button rescueRequestsButton; // Button for Rescue Requests
+     Button rescueRequestsButton; // Button for Rescue Requests
 
-    private String userRole;
-    private String username;
+     String userRole;
+     String username;
 
     private DisasterDAO disasterDAO = new DisasterDAO(); // DAO for database access
 

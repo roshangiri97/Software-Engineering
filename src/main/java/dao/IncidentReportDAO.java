@@ -28,19 +28,18 @@ public class IncidentReportDAO {
 
             // Set the parameters using the IncidentReport model
             // Set the parameters using the IncidentReport model
-            stmt.setInt(1, report.getRequestId());
-         
-            stmt.setString(3, report.getLocation());
-            stmt.setString(4, report.getType());
-            stmt.setInt(5, report.getEvacuations());
-            stmt.setInt(6, report.getRescued());
-            stmt.setInt(7, report.getCasualties());
-            stmt.setString(8, report.getPropertyDamage());
-            stmt.setString(9, report.getInfrastructureImpact());
-            stmt.setString(10, report.getReliefActions());
-            stmt.setString(11, report.getTeamsInvolved());
-            stmt.setString(12, report.getWitnessStatement());
-            stmt.setDate(13, report.getReportDate());
+             stmt.setInt(1, report.getRequestId());
+        stmt.setString(2, report.getLocation()); // Corrected here
+        stmt.setString(3, report.getType());
+        stmt.setInt(4, report.getEvacuations());
+        stmt.setInt(5, report.getRescued());
+        stmt.setInt(6, report.getCasualties());
+        stmt.setString(7, report.getPropertyDamage());
+        stmt.setString(8, report.getInfrastructureImpact());
+        stmt.setString(9, report.getReliefActions());
+        stmt.setString(10, report.getTeamsInvolved());
+        stmt.setString(11, report.getWitnessStatement());
+        stmt.setDate(12, report.getReportDate());
 
             // Execute the insert
             stmt.executeUpdate();

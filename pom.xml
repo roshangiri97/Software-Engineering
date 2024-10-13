@@ -66,6 +66,7 @@
             <artifactId>testfx-junit5</artifactId>
             <version>4.0.16-alpha</version>
             <scope>test</scope>
+            <type>jar</type>
         </dependency>
 
         <dependency>
@@ -73,6 +74,20 @@
             <artifactId>junit-jupiter-params</artifactId>
             <version>5.6.0</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>4.11.0</version>
+            <scope>test</scope>
+            <type>jar</type>
         </dependency>
     </dependencies>
 
